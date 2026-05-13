@@ -274,38 +274,14 @@ export default function CustomerProfile() {
     }
 
     return (
-        <div className="lp">
-            <div className="lpTopLanding">
-                <div style={{ padding: 20, fontFamily: "system-ui" }}>
-
-
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                        marginRight: 230,
-                    }}>
-                        <h1>My Profile</h1>
-
-                        <button onClick={logout} style={{
-                            background: "#000",
-                            color: "#FFD000",
-                            border: "none",
-                            padding: "10px 20px",
-                            borderRadius: 17,
-                            cursor: "pointer",
-                            fontWeight: 900,
-                            height: 40,
-                            width: 100,
-                            marginRight: 10,
-
-                        }}>
-                            Logout
-                        </button>
-                    </div>
-                </div>
+        <div className="lp customerProfilePage">
+            <div className="lpTopLanding customerProfileTop">
+                <h1>My Profile</h1>
+                <button onClick={logout} className="profileLogoutBtn">
+                    Logout
+                </button>
             </div>
+            <div className="customerProfileBody">
             <div style={{
                 marginTop: 16,
                 background: "#fff",
@@ -576,6 +552,7 @@ export default function CustomerProfile() {
             >
                 ← Back
             </button>
+            </div>
         </div>
     );
 }

@@ -2315,3 +2315,294 @@
     font-size: 13px;
     opacity: 0.8;
 }
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+.lp,
+.lpBody,
+.lpTopLanding,
+.footer {
+    max-width: 100%;
+}
+
+.lp {
+    overflow-x: hidden;
+}
+
+.lp a,
+.lp button {
+    text-decoration: none;
+}
+
+.lpCat,
+.lpCatLabel,
+.serviceContent h3,
+.serviceWorkerOption,
+.workerName,
+.serviceChips button {
+    color: #111;
+}
+
+.bookBtn {
+    color: #FFD000;
+}
+
+.bookBtn:disabled {
+    color: #888;
+}
+
+.customerProfilePage {
+    min-height: 100dvh;
+    background: #f6f6f6;
+}
+
+.customerProfileTop {
+    min-height: 128px;
+    padding: 28px 52px;
+}
+
+.customerProfileTop h1 {
+    margin: 0;
+    color: #000;
+    font-size: clamp(32px, 7vw, 54px);
+    line-height: 1.05;
+    font-weight: 950;
+}
+
+.profileLogoutBtn {
+    border: none;
+    background: #000;
+    color: #FFD000;
+    min-width: 112px;
+    min-height: 48px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 950;
+}
+
+.customerProfileBody {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px;
+    padding-bottom: 120px;
+    overflow-x: hidden;
+}
+
+.customerProfileBody > * {
+    max-width: 100%;
+}
+
+.customerProfileBody b,
+.customerProfileBody div {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+    .lp {
+        width: 100%;
+        padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .lpTopLanding {
+        position: static;
+        width: 100%;
+        min-height: 78px;
+        padding: 12px 18px;
+        gap: 12px;
+        box-shadow: none;
+    }
+
+    .lpBrand {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .lpBrandName {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 21px;
+    }
+
+    .lpLogo {
+        width: 54px;
+        height: 54px;
+        flex: 0 0 auto;
+    }
+
+    .lpProfileCircle {
+        width: 56px;
+        height: 56px;
+        font-size: 23px;
+    }
+
+    .lpHero {
+        padding-top: 22px;
+    }
+
+    .lpBody {
+        width: 100%;
+        padding: 16px;
+    }
+
+    .serviceCard,
+    .lpFinder,
+    .lpHow,
+    .lpAbout,
+    .lpGame,
+    .lpCTA,
+    .reviewsSection {
+        max-width: 100%;
+    }
+
+    .lpCats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .lpCat {
+        min-height: 96px;
+        display: grid;
+        align-content: center;
+        color: #111 !important;
+    }
+
+    .lpCatLabel,
+    .serviceContent h3,
+    .workerName,
+    .serviceChips button,
+    .serviceWorkerOption {
+        color: #111 !important;
+    }
+
+    .footer {
+        margin: 32px 0 0;
+        border-radius: 20px 20px 0 0;
+        padding: 32px 24px calc(140px + env(safe-area-inset-bottom));
+    }
+
+    .footerGrid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .footerGrid p,
+    .footerBottom {
+        overflow-wrap: anywhere;
+    }
+
+    .lpFooterSpace {
+        height: 112px;
+    }
+
+    .mobileNav {
+        width: calc(100% - 28px);
+        max-width: 440px;
+        bottom: calc(14px + env(safe-area-inset-bottom));
+        border-radius: 999px;
+        padding: 10px 12px;
+        z-index: 900;
+    }
+
+    .mobileNav button {
+        min-width: 0;
+        display: grid;
+        place-items: center;
+        gap: 2px;
+        padding: 4px 2px;
+        color: #aaa !important;
+        font-weight: 800;
+    }
+
+    .mobileNav button.active {
+        color: #FFD000 !important;
+    }
+
+    .mobileNav p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .customerProfileTop {
+        min-height: 126px;
+        padding: 30px 22px;
+    }
+
+    .customerProfileBody {
+        padding: 16px;
+        padding-bottom: calc(120px + env(safe-area-inset-bottom));
+    }
+
+    .notifyHeader {
+        align-items: flex-start;
+    }
+
+    .notifyHeader button {
+        flex: 0 0 auto;
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 430px) {
+    .lpTopLanding {
+        padding: 12px 16px;
+    }
+
+    .lpLogo {
+        width: 48px;
+        height: 48px;
+    }
+
+    .lpBrandName {
+        font-size: 19px;
+        letter-spacing: .5px;
+    }
+
+    .lpProfileCircle {
+        width: 52px;
+        height: 52px;
+    }
+
+    .footer {
+        padding-inline: 22px;
+    }
+
+    .mobileNav {
+        width: calc(100% - 22px);
+        bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .customerProfileTop h1 {
+        font-size: 38px;
+    }
+
+    .profileLogoutBtn {
+        min-width: 98px;
+        min-height: 44px;
+    }
+}
