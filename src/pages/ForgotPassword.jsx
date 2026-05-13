@@ -25,7 +25,17 @@ export default function ForgotPassword() {
             setMsg(res.data?.message || "Reset link sent to your email.");
 
         } catch (error) {
-            setErr(error?.response?.data?.message || "Something went wrong.");
+            const backendMessage = error?.response?.data?.message;
+
+            if (backendMessage) {
+                setErr(backendMessage);
+            } else if (error?.code === "ECONNABORTED") {
+                setErr("The email server took too long to respond. Check the backend email settings and VibeNest logs.");
+            } else if (!error?.response) {
+                setErr("Cannot reach the backend right now. Check that the backend is running and deployed.");
+            } else {
+                setErr(`Server error ${error.response.status}. Check the backend logs.`);
+            }
         } finally {
             setLoading(false);
         }
