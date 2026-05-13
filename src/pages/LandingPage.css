@@ -2606,3 +2606,141 @@ select {
         min-height: 44px;
     }
 }
+
+/* Final mobile polish: keep Safari from turning app controls blue and
+   keep the footer clear of the floating bottom navigation. */
+@media (max-width: 768px) {
+    .lp button,
+    .lp a,
+    .lp input,
+    .lp textarea,
+    .lp select {
+        -webkit-tap-highlight-color: rgba(255, 208, 0, 0.18);
+    }
+
+    .serviceChips button {
+        color: #111 !important;
+        -webkit-text-fill-color: #111;
+    }
+
+    .serviceChips button.active {
+        background: #000 !important;
+        border-color: #000 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000;
+    }
+
+    .bookingSteps button,
+    .mapToggle,
+    .slotCard,
+    .promoCodeRow button,
+    .modalActions button,
+    .cancelBtn {
+        color: #111 !important;
+        -webkit-text-fill-color: #111;
+        text-decoration: none;
+    }
+
+    .bookingSteps button {
+        background: #fff;
+        border-color: #ddd;
+    }
+
+    .bookingSteps button.active {
+        background: #FFD000 !important;
+        border-color: #FFD000 !important;
+        color: #111 !important;
+        -webkit-text-fill-color: #111;
+    }
+
+    .mapToggle {
+        min-height: 48px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-weight: 950;
+    }
+
+    .bookBtn {
+        background: #FFD000 !important;
+        color: #111 !important;
+        -webkit-text-fill-color: #111;
+    }
+
+    .bookBtn:disabled {
+        background: #e7e7e7 !important;
+        color: #888 !important;
+        -webkit-text-fill-color: #888;
+    }
+
+    .confirmBtn {
+        background: #000 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000;
+    }
+
+    .lpFooterSpace {
+        height: 0 !important;
+    }
+
+    .footer {
+        margin: 24px 0 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding: 30px 24px calc(116px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .footer h2 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .footer p {
+        font-size: 17px;
+        line-height: 1.35;
+    }
+
+    .footerIcons {
+        margin: 16px 0 24px;
+    }
+
+    .footerIcons div {
+        width: 48px;
+        height: 48px;
+    }
+
+    .footerGrid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .footerGrid h4 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footerGrid p {
+        margin: 8px 0;
+        overflow-wrap: anywhere;
+    }
+
+    .footerBottom {
+        margin-top: 22px;
+        font-size: 14px;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 430px) {
+    .footer {
+        padding-inline: 22px !important;
+        padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .footer p {
+        font-size: 16px;
+    }
+
+    .footerBottom {
+        font-size: 13px;
+    }
+}
