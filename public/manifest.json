@@ -1,0 +1,26 @@
+{
+  "short_name": "Tazabeet",
+  "name": "TAZABEET - Home Services",
+  "description": "Book trusted home services in Alexandria with TAZABEET.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFD000",
+  "theme_color": "#FFD000",
+  "categories": ["business", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

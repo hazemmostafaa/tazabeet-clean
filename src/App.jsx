@@ -21,6 +21,7 @@ import ContactPage from "./pages/ContactPage";
 import WorkerProfile from "./pages/WorkerProfile";
 import { bindSessionActivity } from "./utils/sessionSecurity";
 import SeoManager from "./components/SeoManager";
+import InstallPwaPrompt from "./components/InstallPwaPrompt";
 
 
 export default function App() {
@@ -86,6 +87,7 @@ export default function App() {
         <Route path="*" element={<LandingPage />} />
 
       </Routes>
+      <InstallPwaPrompt />
       <ToastContainer position="top-right" autoClose={2500} hideProgressBar={false} newestOnTop />
     </>
   );

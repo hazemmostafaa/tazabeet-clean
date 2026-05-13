@@ -210,6 +210,12 @@ export const dashboardTranslations = {
             book: "Book {{service}}",
             note: "AI gives quick safety guidance only. For danger, call emergency services and book a professional.",
         },
+        pwa: {
+            title: "Install Tazabeet",
+            androidText: "Add Tazabeet to your home screen for faster access.",
+            iosText: "On iPhone: tap Share, then Add to Home Screen.",
+            install: "Install",
+        },
         footer: {
             tagline: "Your trusted partner for home services in Alexandria.",
             quickLinks: "Quick Links",
@@ -680,6 +686,12 @@ export const dashboardTranslations = {
             send: "إرسال",
             book: "احجز {{service}}",
             note: "الذكاء الاصطناعي يعطي إرشادات أمان سريعة فقط. في حالة الخطر اتصل بالطوارئ واحجز مختصا.",
+        },
+        pwa: {
+            title: "ثبت تازابيت",
+            androidText: "أضف تازابيت للشاشة الرئيسية للوصول بسرعة.",
+            iosText: "على iPhone: اضغط مشاركة ثم Add to Home Screen.",
+            install: "تثبيت",
         },
         footer: {
             tagline: "شريكك الموثوق للخدمات المنزلية في الإسكندرية.",
