@@ -1,0 +1,2317 @@
+.lp {
+    min-height: 100vh;
+    background: #f6f6f6;
+    font-family: system-ui;
+    padding: 0;
+}
+
+.lpTopLanding {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 18px;
+    background: #ffd000;
+}
+
+
+
+.lpBrand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.lpLogo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #fff;
+    padding: 4px;
+}
+
+.lpBrandName {
+    font-weight: 950;
+    letter-spacing: 1px;
+    font-size: 22px;
+    color: #000;
+}
+
+.lpDesktopNav {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+}
+
+.lpDesktopNav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    color: #111;
+    opacity: .9;
+}
+
+.lpDesktopNav button:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+
+.lpTopBtns button {
+    all: unset;
+    cursor: pointer;
+}
+
+
+.lpTopBtns .lpBtn.ghost {
+    background: rgba(255, 255, 255, 0.4) !important;
+    color: #000 !important;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 14px;
+    display: inline-block;
+}
+
+
+.lpTopBtns .lpBtn.dark {
+    background: #000;
+    color: #FFD000;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.lpTopBtns .lpBtn.dark:hover {
+    transform: translateY(-2px);
+}
+
+
+
+.lpBtn {
+    white-space: nowrap !important;
+    height: 45px !important;
+}
+
+
+.lpProfileBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.lpProfileCircle {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #FFD000;
+    font-size: 20px;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.lpNeedLogin {
+    max-width: 1100px;
+    margin: 12px auto 0;
+    background: #000;
+    color: #FFD000;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: 900;
+}
+
+
+.lpHero {
+    background: #ffd000;
+    padding: 28px 18px 32px;
+}
+
+.lpHeroInner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+    gap: 22px;
+    align-items: center;
+}
+
+.lpLoc {
+    opacity: .85;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.lpTitleA {
+    font-size: 46px;
+    font-weight: 950;
+    color: #000;
+    line-height: 1.02;
+}
+
+.lpTitleB {
+    font-size: 46px;
+    font-weight: 950;
+    color: #fff;
+    line-height: 1.02;
+    text-shadow: 0 12px 24px rgba(0, 0, 0, .12);
+    margin-top: 4px;
+}
+
+.lpHeroText {
+    max-width: 640px;
+    margin: 14px 0 0;
+    color: #2a2a2a;
+    font-size: 17px;
+    line-height: 1.55;
+    font-weight: 650;
+}
+
+.lpSearch {
+    margin-top: 18px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, .12);
+    max-width: 820px;
+}
+
+.lpSearchIcon {
+    opacity: .6;
+}
+
+.lpSearchInput {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 18px;
+}
+
+.lpSearchBtn {
+    border: none;
+    background: #000;
+    color: #ffd000;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-weight: 950;
+    cursor: pointer;
+    max-width: 100px;
+}
+
+.lpHeroActions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.lpHeroActions button,
+.lpNeedResult button {
+    border: none;
+    background: #111;
+    color: #FFD000;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.lpHeroActions button:last-child {
+    background: #fff;
+    color: #111;
+}
+
+.lpHeroPanel {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, .14);
+}
+
+.lpPanelHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+}
+
+.lpPanelHeader span {
+    color: #666;
+    font-weight: 800;
+}
+
+.lpPanelHeader b {
+    color: #111;
+    font-size: 18px;
+}
+
+.lpPanelSteps {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.lpPanelSteps div {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.lpPanelSteps b {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #FFD000;
+    display: grid;
+    place-items: center;
+}
+
+.lpPanelSteps span {
+    font-weight: 850;
+}
+
+.lpHeroStats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.lpHeroStats div {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 10px;
+    display: grid;
+    gap: 2px;
+}
+
+.lpHeroStats b {
+    font-size: 18px;
+}
+
+.lpHeroStats span {
+    color: #666;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.contactGrid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.contactPanel,
+.contactForm {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, .06);
+}
+
+.contactPanel h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.contactPanel p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.contactInfo {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.contactInfo div {
+    display: grid;
+    gap: 4px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.contactInfo span {
+    color: #555;
+}
+
+.contactForm {
+    display: grid;
+    gap: 10px;
+}
+
+.contactForm label {
+    font-weight: 900;
+}
+
+.contactForm input,
+.contactForm textarea {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    font: inherit;
+    resize: vertical;
+}
+
+.contactForm button {
+    border: none;
+    background: #000;
+    color: #FFD000;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    .contactGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.serviceCard {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+
+    margin-bottom: 20px;
+}
+
+
+.serviceImgWrapper {
+    width: 100%;
+    height: 220px;
+    min-height: 220px;
+
+    max-height: 220px;
+
+    overflow: hidden;
+    position: relative;
+}
+
+.serviceImg {
+    width: 100%;
+    height: 100% !important;
+
+    min-height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+.serviceContent {
+    padding: 15px;
+}
+
+.lpBody {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px;
+}
+
+.lpFinder,
+.lpHow {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, .05);
+    margin-bottom: 18px;
+}
+
+.lpSectionKicker {
+    display: inline-block;
+    color: #9b7a00;
+    font-weight: 950;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.lpFinder h2,
+.lpHow h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.lpFinder p {
+    color: #555;
+    margin: 6px 0 0;
+}
+
+.lpNeedGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.lpNeedGrid button {
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.lpNeedGrid button.active {
+    background: #111;
+    color: #FFD000;
+    border-color: #111;
+}
+
+.lpNeedResult {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 12px;
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.lpNeedResult span {
+    display: block;
+    color: #666;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.lpNeedResult b {
+    display: block;
+    font-size: 20px;
+}
+
+.lpRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.lpH2 {
+    font-size: 30px;
+    font-weight: 950;
+    color: #111;
+}
+
+.lpLink {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 900;
+    color: #9b7a00;
+}
+
+.lpCats {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 14px;
+}
+
+.lpCat {
+    background: #fff;
+    border: 2px solid rgba(255, 208, 0, .35);
+    border-radius: 16px;
+    padding: 14px 10px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.lpCat:hover {
+    border-color: #FFD000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
+}
+
+.lpCatIcon {
+    font-size: 26px;
+}
+
+.lpCatLabel {
+    margin-top: 10px;
+    font-weight: 900;
+    opacity: .85;
+}
+
+.lpPromo {
+    margin-top: 18px;
+    background: #111;
+    color: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    min-height: 180px;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, .12);
+}
+
+.lpPromoLeft {
+    padding: 18px;
+}
+
+.lpBadge {
+    display: inline-block;
+    background: #ffd000;
+    color: #000;
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-weight: 950;
+}
+
+.lpPromoTitle {
+    font-size: 28px;
+    font-weight: 950;
+    margin-top: 12px;
+}
+
+.lpPromoSub {
+    opacity: .85;
+    margin-top: 6px;
+}
+
+.lpPromoBtn {
+    margin-top: 14px;
+    border: none;
+    background: #fff;
+    color: #000;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.lpPromoRight {
+    background: #171717;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+}
+
+.lpPromoRight div {
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 14px;
+    padding: 14px;
+    display: grid;
+    gap: 6px;
+}
+
+.lpPromoRight b {
+    color: #FFD000;
+}
+
+.lpPromoRight span {
+    color: rgba(255, 255, 255, .78);
+}
+
+.lpTrustStrip,
+.lpHowGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.lpTrustStrip div,
+.lpHowGrid div {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 14px;
+    display: grid;
+    gap: 6px;
+}
+
+.lpTrustStrip b,
+.lpHowGrid b {
+    color: #111;
+    font-size: 17px;
+}
+
+.lpTrustStrip span,
+.lpHowGrid span {
+    color: #555;
+    line-height: 1.4;
+}
+
+.lpHow {
+    margin-top: 18px;
+}
+
+.lpAbout,
+.lpGame {
+    margin-top: 18px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, .05);
+}
+
+.lpAbout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .85fr);
+    gap: 14px;
+    align-items: center;
+}
+
+.lpAbout h2,
+.lpGame h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.lpAbout p,
+.lpGame p {
+    color: #555;
+    line-height: 1.55;
+}
+
+.lpAboutGrid {
+    display: grid;
+    gap: 10px;
+}
+
+.lpAboutGrid div {
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    border-radius: 14px;
+    padding: 12px;
+    display: grid;
+    gap: 5px;
+}
+
+.lpAboutGrid span {
+    color: #555;
+    line-height: 1.4;
+}
+
+.lpGame {
+    background: #111;
+    color: #fff;
+}
+
+.lpGame .lpSectionKicker {
+    color: #FFD000;
+}
+
+.lpGameIntro p {
+    color: rgba(255, 255, 255, .75);
+}
+
+.lpGameCards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.lpGameCard {
+    border: 1px solid rgba(255, 208, 0, .35);
+    background: #1d1d1d;
+    color: #fff;
+    border-radius: 14px;
+    padding: 16px 10px;
+    display: grid;
+    gap: 8px;
+    justify-items: center;
+    cursor: pointer;
+}
+
+.lpGameCard span {
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    background: #FFD000;
+    color: #111;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 950;
+}
+
+.lpGameCard b {
+    text-align: center;
+}
+
+.lpGameCard.active {
+    background: #FFD000;
+    color: #111;
+}
+
+.lpGameCard.active span {
+    background: #111;
+    color: #FFD000;
+}
+
+.lpGameResult {
+    margin-top: 12px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.lpGameResult div {
+    flex: 1;
+    min-width: 190px;
+}
+
+.lpGameResult b {
+    color: #FFD000;
+}
+
+.lpGameResult button {
+    border: none;
+    background: #FFD000;
+    color: #111;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.lpGameResult button:last-child {
+    background: #fff;
+}
+
+.lpTopRated {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.lpRated {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
+}
+
+.lpRatedAvatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: #ffd000;
+    color: #000;
+    display: grid;
+    place-items: center;
+    font-weight: 950;
+}
+
+.lpRatedName {
+    font-weight: 950;
+}
+
+.lpRatedJob {
+    opacity: .7;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.lpRatedRating {
+    font-weight: 950;
+}
+
+.lpCTA {
+    margin-top: 18px;
+    background: #000;
+    border-radius: 18px;
+    padding: 18px;
+    color: #ffd000;
+}
+
+.lpCTATitle {
+    font-size: 22px;
+    font-weight: 950;
+}
+
+.lpCTASub {
+    opacity: .85;
+    margin-top: 6px;
+}
+
+.lpCTAButton {
+    margin-top: 12px;
+    border: none;
+    background: #ffd000;
+    color: #000;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.lpCTAButtons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.lpCTAButton.secondary {
+    background: #fff;
+    color: #111;
+}
+
+.lpFooterSpace {
+    height: 90px;
+}
+
+
+
+
+.lpNavItem {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    font-weight: 800;
+    opacity: .85;
+}
+
+.lpNavItem.active {
+    color: #c0006f;
+    opacity: 1;
+}
+
+.lpNavIcon {
+    font-size: 18px;
+}
+
+
+@media (max-width:900px) {
+
+    .lpHeroInner {
+        grid-template-columns: 1fr;
+    }
+
+    .lpTitleA,
+    .lpTitleB {
+        font-size: 38px;
+    }
+
+    .lpCats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lpPromo {
+        grid-template-columns: 1fr;
+    }
+
+    .lpNeedGrid,
+    .lpTrustStrip,
+    .lpHowGrid,
+    .lpGameCards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lpAbout {
+        grid-template-columns: 1fr;
+    }
+
+    .lpBottomNav {
+        display: grid;
+    }
+}
+
+@media (max-width:768px) {
+    .lpDesktopNav {
+        display: none;
+    }
+
+    .lpTopLanding {
+        padding: 10px 12px;
+    }
+
+    .lpBrandName {
+        font-size: 18px;
+    }
+
+    .lpLogo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .lpTopBtns {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        min-width: 0;
+    }
+
+    .lpTopBtns .lpBtn.ghost,
+    .lpTopBtns .lpBtn.dark {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .servicesToolbar {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .servicesToolbar h2 {
+        font-size: 24px;
+    }
+
+    .modalOverlay {
+        align-items: flex-end;
+        padding: 10px;
+    }
+
+    .modalBox {
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 18px 18px 12px 12px;
+    }
+
+    .bookingHeader {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .bookingSteps {
+        width: 100%;
+    }
+
+    .bookingSteps button {
+        flex: 1;
+        border-radius: 10px;
+    }
+
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .modalActions.split {
+        flex-direction: row;
+    }
+
+    .slotMeta {
+        display: grid;
+    }
+}
+
+
+.serviceCard {
+    background: #fff;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.serviceImg {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.serviceContent {
+    padding: 16px;
+}
+
+.servicesToolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 340px);
+    gap: 14px;
+    align-items: end;
+    margin-bottom: 14px;
+}
+
+.servicesToolbar h2 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.servicesToolbar p {
+    margin: 4px 0 0;
+    color: #666;
+}
+
+.servicesToolbar input {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    font: inherit;
+}
+
+.serviceChips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.serviceChips button {
+    flex: 0 0 auto;
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.serviceChips button.active {
+    background: #000;
+    color: #FFD000;
+    border-color: #000;
+}
+
+.serviceEmpty {
+    display: grid;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    color: #555;
+}
+
+.serviceEmpty b {
+    color: #111;
+}
+
+.serviceEmpty.small {
+    padding: 10px;
+    font-size: 13px;
+    background: #f8f8f8;
+}
+
+.workerRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.serviceWorkerHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    color: #555;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.serviceWorkersBottom {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.serviceWorkerHeader small {
+    color: #888;
+    font-weight: 700;
+}
+
+.serviceWorkersList {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+    max-height: 190px;
+    overflow-y: auto;
+    padding-right: 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.serviceWorkerOption {
+    width: 100%;
+    border: 1px solid #eee;
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 0;
+}
+
+.serviceWorkerOption:hover {
+    border-color: #FFD000;
+    background: #fffbea;
+}
+
+.serviceWorkerInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.serviceWorkerOption .rating {
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.serviceWorkerOption .rating span {
+    color: #777;
+    margin-left: 3px;
+}
+
+.workerFeedbacks {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.workerFeedbacks p {
+    margin: 0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.workerFeedbacks p span {
+    display: block;
+    color: #888;
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.workerProfileHero {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.workerProfilePhoto {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    background: #FFD000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    font-weight: 950;
+    font-size: 28px;
+}
+
+.workerProfilePhoto.large {
+    width: 96px;
+    height: 96px;
+}
+
+.workerProfilePhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.publicWorkerSection {
+    margin-top: 22px;
+}
+
+.publicWorkerSection h3 {
+    margin: 0 0 10px;
+}
+
+.publicWorkerSection p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.publicPortfolioGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.publicPortfolioCard {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 12px;
+    background: #fafafa;
+}
+
+.publicPortfolioCard h4 {
+    margin: 0 0 6px;
+}
+
+.publicPortfolioMedia {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.publicPortfolioMedia img,
+.publicPortfolioMedia video {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.serviceReviewPreview {
+    margin-top: 10px;
+    border-left: 3px solid #FFD000;
+    padding-left: 10px;
+    color: #555;
+    font-size: 14px;
+}
+
+.serviceReviewPreview p {
+    margin: 0;
+}
+
+.workerAvatar {
+    width: 40px;
+    height: 40px;
+    background: #FFD000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.workerName {
+    font-weight: bold;
+}
+
+.workerJob {
+    font-size: 12px;
+    color: #777;
+}
+
+.verifiedBadge {
+    display: inline-block;
+    margin-top: 6px;
+    background: #f1f1f1;
+    color: #555;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.verifiedBadge.ok {
+    background: #fff8c9;
+    color: #111;
+    border: 1px solid #FFD000;
+}
+
+.favoriteBtn {
+    margin-top: 8px;
+    border: none;
+    background: #111;
+    color: #FFD000;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.rating {
+    margin-top: 6px;
+    color: #f4b400;
+    font-weight: bold;
+}
+
+.review {
+    font-size: 14px;
+    color: #555;
+    margin-top: 6px;
+}
+
+.bookBtn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: #FFD000;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bookBtn:disabled {
+    background: #e7e7e7;
+    color: #888;
+    cursor: not-allowed;
+}
+
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.58);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    z-index: 1200;
+}
+
+.modalBox {
+    background: #fff;
+    padding: 18px;
+    border-radius: 14px;
+    width: min(560px, 100%);
+    max-height: min(88vh, 760px);
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .25);
+}
+
+.bookingModal {
+    display: grid;
+    gap: 14px;
+}
+
+.modalClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: none;
+    background: #f1f1f1;
+    color: #111;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.bookingHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding-right: 38px;
+}
+
+.bookingHeader span {
+    color: #666;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.bookingHeader h3 {
+    margin: 2px 0 0;
+    font-size: 24px;
+}
+
+.bookingSteps {
+    display: flex;
+    gap: 6px;
+}
+
+.bookingSteps button {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.bookingSteps button.active {
+    background: #FFD000;
+    border-color: #FFD000;
+}
+
+.bookingStep {
+    display: grid;
+    gap: 10px;
+}
+
+.bookingStep label {
+    font-weight: 900;
+}
+
+.bookingStep input,
+.bookingStep select,
+.bookingTextarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    font: inherit;
+}
+
+.bookingTextarea {
+    min-height: 86px;
+    resize: vertical;
+}
+
+.bookingStep input.fieldError {
+    border-color: #b00020;
+    background: #fff6f7;
+}
+
+.inlineError {
+    color: #b00020;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.mapToggle {
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.locationPreview {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.stepTitleRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.stepTitleRow h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.stepTitleRow span {
+    color: #666;
+    font-size: 13px;
+}
+
+.slotList {
+    display: grid;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.slotCard {
+    width: 100%;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.slotCard.active {
+    background: #fff8c9;
+    border-color: #FFD000;
+    box-shadow: inset 0 0 0 2px #FFD000;
+}
+
+.slotWorker {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.slotWorker>span {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: #FFD000;
+    display: grid;
+    place-items: center;
+    font-weight: 950;
+}
+
+.slotWorker small {
+    display: block;
+    color: #666;
+    margin-top: 2px;
+}
+
+.slotMeta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: #555;
+    font-size: 13px;
+}
+
+.selectedReviews {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.selectedReviews p {
+    margin: 6px 0 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.bookingSummary {
+    display: grid;
+    gap: 8px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.bookingSummary h4 {
+    margin: 0 0 4px;
+}
+
+.bookingSummary div {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 10px;
+}
+
+.bookingSummary span {
+    color: #666;
+}
+
+.bookingSummary b {
+    overflow-wrap: anywhere;
+}
+
+.bookingFileList {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.bookingFileList span {
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.promoCodeRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+}
+
+.promoCodeRow button {
+    border: none;
+    background: #111;
+    color: #FFD000;
+    border-radius: 10px;
+    padding: 0 14px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.priceEstimateBox {
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    border-radius: 12px;
+    padding: 12px;
+    display: grid;
+    gap: 4px;
+}
+
+.priceEstimateBox b {
+    font-size: 17px;
+}
+
+.priceEstimateBox span,
+.priceEstimateBox p {
+    color: #555;
+    margin: 0;
+    font-size: 13px;
+}
+
+.bookingTimeline {
+    margin-top: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.bookingTimeline h4 {
+    margin: 0 0 2px;
+}
+
+.timelineItem {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
+}
+
+.timelineDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #FFD000;
+    border: 2px solid #111;
+    margin-top: 5px;
+}
+
+.timelineItem b {
+    display: block;
+}
+
+.timelineItem p {
+    margin: 2px 0;
+    color: #555;
+}
+
+.timelineItem small {
+    color: #777;
+}
+
+.notifyPanel {
+    margin-top: 12px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.notifyHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.notifyHeader h3 {
+    margin: 0;
+}
+
+.notifyHeader button {
+    border: none;
+    background: #111;
+    color: #FFD000;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.notifyList {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.notifyItem {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    background: #fafafa;
+}
+
+.notifyItem.unread {
+    background: #fff8c9;
+    border-color: #FFD000;
+}
+
+.notifyItem span,
+.notifyItem small {
+    color: #555;
+}
+
+.confirmBtn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: #000;
+    color: #FFD000;
+    border: none;
+    border-radius: 10px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.cancelBtn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    background: #f1f1f1;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.modalActions {
+    display: flex;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.modalActions.split button {
+    flex: 1;
+}
+
+
+.lpFooterSpace {
+    height: 0.1px;
+}
+
+
+.mobileNav {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: #111;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    opacity: 0.95;
+}
+
+.mobileNav button {
+    background: none;
+    border: none;
+    color: #FFD000;
+    text-align: center;
+    font-size: 18px;
+}
+
+.mobileNav p {
+    font-size: 12px;
+    margin: 2px 0 0;
+}
+
+.mobileNav {
+    transition: all 0.3s ease;
+}
+
+.mobileNav.hide {
+    transform: translate(-50%, 120%);
+    opacity: 0;
+}
+
+.mobileNav.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+.mobileNav button.active {
+    color: #FFD000;
+    font-weight: bold;
+}
+
+.mobileNav button {
+    color: #aaa;
+}
+
+@media (min-width: 768px) {
+    .mobileNav {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .lp {
+        padding-bottom: 84px;
+    }
+
+    .lpHero {
+        padding: 18px 12px 20px;
+    }
+
+    .lpTitleA,
+    .lpTitleB {
+        font-size: 34px;
+    }
+
+    .lpHeroText {
+        font-size: 15px;
+    }
+
+    .lpSearch {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        border-radius: 14px;
+    }
+
+    .lpSearchBtn {
+        grid-column: 1 / -1;
+        max-width: none;
+        width: 100%;
+        border-radius: 12px;
+        min-height: 42px;
+    }
+
+    .lpHeroActions button {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .lpHeroPanel {
+        border-radius: 14px;
+        padding: 12px;
+    }
+
+    .lpHeroStats {
+        grid-template-columns: 1fr;
+    }
+
+    .lpBody {
+        padding: 12px;
+    }
+
+    .lpFinder,
+    .lpHow,
+    .lpAbout,
+    .lpGame {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .lpFinder h2,
+    .lpHow h2,
+    .lpAbout h2,
+    .lpGame h2,
+    .lpH2,
+    .reviewsTitle {
+        font-size: 24px;
+        line-height: 1.15;
+    }
+
+    .lpNeedGrid,
+    .lpTrustStrip,
+    .lpHowGrid,
+    .lpGameCards {
+        grid-template-columns: 1fr;
+    }
+
+    .lpGameResult {
+        display: grid;
+    }
+
+    .lpGameResult button {
+        width: 100%;
+        min-height: 42px;
+    }
+
+    .lpNeedResult {
+        grid-template-columns: 1fr;
+    }
+
+    .lpNeedResult button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .lpCats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .lpCat {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .lpPromo {
+        border-radius: 14px;
+    }
+
+    .lpTopRated {
+        gap: 10px;
+    }
+
+    .lpRated {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .reviewsSection {
+        margin-top: 28px;
+    }
+
+    .reviewsWrapper {
+        padding: 0;
+        gap: 10px;
+    }
+
+    .reviewCard {
+        min-width: 88%;
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    .lpCTA {
+        border-radius: 14px;
+    }
+
+    .lpCTAButtons,
+    .lpCTAButton {
+        width: 100%;
+    }
+
+    .footer {
+        border-radius: 14px 14px 0 0;
+        padding: 28px 14px 96px;
+    }
+
+    .footerGrid {
+        display: grid;
+        gap: 8px;
+    }
+
+    .servicesToolbar {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .servicesToolbar h2 {
+        font-size: 24px;
+        line-height: 1.1;
+    }
+
+    .servicesToolbar p {
+        font-size: 14px;
+    }
+
+    .serviceChips {
+        margin-left: -12px;
+        margin-right: -12px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .serviceCard {
+        border-radius: 14px;
+        margin-bottom: 14px;
+    }
+
+    .serviceImgWrapper {
+        height: 150px;
+        min-height: 150px;
+        max-height: 150px;
+    }
+
+    .serviceContent {
+        padding: 12px;
+    }
+
+    .serviceContent h3 {
+        margin: 0 0 8px;
+        font-size: 20px;
+    }
+
+    .serviceWorkerHeader {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .serviceWorkersList {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .serviceWorkerOption {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        padding: 9px;
+    }
+
+    .workerAvatar {
+        width: 38px;
+        height: 38px;
+    }
+
+    .workerName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .bookBtn {
+        min-height: 46px;
+        border-radius: 12px;
+    }
+
+    .modalOverlay {
+        align-items: flex-end;
+        padding: 8px;
+    }
+
+    .modalBox {
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 18px 18px 12px 12px;
+        padding: 14px;
+    }
+
+    .bookingHeader {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-right: 42px;
+    }
+
+    .bookingSteps {
+        width: 100%;
+    }
+
+    .bookingSteps button {
+        flex: 1;
+        border-radius: 10px;
+    }
+
+    .slotList {
+        max-height: 42vh;
+    }
+
+    .slotCard {
+        padding: 10px;
+    }
+
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .modalActions.split {
+        flex-direction: row;
+    }
+
+    .mobileNav {
+        width: calc(100% - 16px);
+        max-width: none;
+        bottom: max(8px, env(safe-area-inset-bottom));
+        border-radius: 20px;
+        padding: 8px;
+    }
+
+    .mobileNav button {
+        min-width: 0;
+        padding: 4px 2px;
+    }
+}
+
+@media (max-width: 430px) {
+    .lpTitleA,
+    .lpTitleB {
+        font-size: 30px;
+    }
+
+    .servicesToolbar input {
+        padding: 11px;
+    }
+
+    .serviceWorkerOption {
+        grid-template-columns: 34px minmax(0, 1fr);
+    }
+
+    .serviceWorkerOption .rating {
+        grid-column: 2;
+    }
+
+    .workerAvatar {
+        width: 34px;
+        height: 34px;
+    }
+
+    .bookingSummary div {
+        grid-template-columns: 74px minmax(0, 1fr);
+    }
+}
+
+.reviewsSection {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.reviewsTitle {
+    text-align: left;
+    font-size: 30px;
+    font-weight: 950;
+    margin-bottom: 10px;
+}
+
+
+.reviewCard {
+    margin: 0 auto;
+    padding: 22px;
+    max-width: 420px;
+    background: linear-gradient(145deg, #ffffff, #f3f3f3);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    transition: 0.3s;
+}
+
+.reviewCard:hover {
+    transform: translateY(-5px);
+}
+
+.reviewsWrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 16px;
+    gap: 14px;
+
+}
+
+.reviewCard {
+    min-width: min(420px, calc(100% - 32px));
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+}
+
+.reviewTop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.reviewAvatar {
+    width: 50px;
+    height: 50px;
+    background: #FFD000;
+    color: #000;
+    font-weight: 900;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reviewRole {
+    font-size: 12px;
+    color: #777;
+    margin-top: -5px;
+}
+
+
+.reviewText {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: #444;
+}
+
+
+.reviewStars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: #f4b400;
+}
+
+.footer {
+    background: linear-gradient(135deg, #111, #1e2a38);
+    color: white;
+    padding: 40px 20px;
+    margin-top: 50px;
+    border-radius: 20px 20px 0 0;
+}
+
+.footer h2 {
+    color: #FFD000;
+}
+
+.footerIcons {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.footerIcons div {
+    background: #333;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.footerGrid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.footerGrid h4 {
+    margin-bottom: 10px;
+}
+
+.footerGrid p {
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.footerBottom {
+    margin-top: 20px;
+    font-size: 13px;
+    opacity: 0.8;
+}

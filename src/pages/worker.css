@@ -1,0 +1,730 @@
+.wd {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background: #f5f5f5;
+    color: #111;
+}
+
+.wd,
+.wd * {
+    box-sizing: border-box;
+}
+
+.wdSidebar {
+    width: 240px;
+    background: #000;
+    color: #FFD000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+}
+
+.wdLogo {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.wdMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wdMenuItem {
+    background: transparent;
+    border: 1px solid rgba(255, 208, 0, 0.3);
+    color: #FFD000;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.wdMenuItem:hover {
+    background: rgba(255, 208, 0, 0.1);
+}
+
+.wdMenuItem.active {
+    background: #FFD000;
+    color: #000;
+}
+
+.wdLogout {
+    margin-top: auto;
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.wdContent {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+    background: #f5f5f5;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.wdContent h1 {
+    margin: 0 0 18px;
+    font-size: 32px;
+    line-height: 1.1;
+}
+
+.wdCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.wdCard {
+    background: #FFD000;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 104px;
+    display: grid;
+    align-content: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
+}
+
+.wdCard h2 {
+    margin: 8px 0 0;
+    font-size: 30px;
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+}
+
+.wdTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+    background: #fff;
+}
+
+.wdTable th,
+.wdTable td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.wdTable th {
+    font-size: 13px;
+    background: #111;
+    color: #FFD000;
+    white-space: nowrap;
+}
+
+.wdTable td {
+    font-size: 14px;
+}
+
+.jobMediaList {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.jobMediaList a {
+    color: #111;
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.quoteBox {
+    display: grid;
+    gap: 6px;
+    min-width: 150px;
+}
+
+.quoteBox input {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px;
+    font: inherit;
+}
+
+.jobProgressMini {
+    margin-top: 5px;
+    color: #555;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.progressActions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.progressActions button {
+    border: 1px solid #FFD000;
+    background: #fff8c9;
+    color: #111;
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.status.confirmed {
+    color: green;
+}
+
+.status.pending {
+    color: orange;
+}
+
+.status.completed {
+    color: blue;
+}
+
+.wdPanel textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    resize: vertical;
+}
+
+.wdPanel {
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, .06);
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+.wdPanel h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.wdPanel input,
+.wdPanel textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.wdPanel button {
+    margin-top: 12px;
+    background: #000;
+    color: #FFD000;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    width: 100%;
+}
+
+.wdPanel .acceptBtn,
+.wdPanel .rejectBtn,
+.wdPanel .completeBtn,
+.wdPanel .cancelBtn,
+.wdPanel .deleteBtn {
+    width: auto;
+    margin-top: 0;
+}
+
+.portfolioGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.portfolioCard {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.portfolioMedia img,
+.portfolioMedia video {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.workerPhotoEditor {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.workerProfilePhoto {
+    width: 88px;
+    height: 88px;
+    border-radius: 999px;
+    background: #FFD000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    font-weight: 950;
+    font-size: 30px;
+}
+
+.workerProfilePhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.acceptBtn {
+    background: green;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.rejectBtn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.completeBtn,
+.cancelBtn {
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.completeBtn {
+    background: #0a7a2f;
+    color: #fff;
+}
+
+.cancelBtn {
+    background: #222;
+    color: #FFD000;
+}
+
+.deleteBtn {
+    margin-top: 8px;
+    width: 100%;
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.filterBar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filterBtn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #f1f1f1;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    width: auto;
+}
+
+.filterBtn.active {
+    background: #FFD000;
+    color: black;
+}
+
+.mobileBottomNav {
+    position: fixed;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 20px);
+    max-width: 520px;
+    background: #111;
+    border-radius: 22px;
+    display: none;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
+    padding: 8px;
+    z-index: 999;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .25);
+}
+
+.mobileBottomNav button {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    min-height: 48px;
+    padding: 4px 2px;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.mobileBottomNav span {
+    font-size: 10px;
+    line-height: 1.1;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobileBottomNav button.active {
+    color: #FFD000;
+    background: rgba(255, 208, 0, .12);
+}
+
+input,
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.workerContainer {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.messagesLayout {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.threadList {
+    display: grid;
+    gap: 8px;
+}
+
+.threadButton {
+    text-align: left;
+    border: 1px solid #eee;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.threadButton.active {
+    background: #FFD000;
+    border-color: #FFD000;
+}
+
+.messageReplyForm {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.messageReplyForm input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.messageReplyForm button {
+    width: auto;
+    min-width: 88px;
+    margin-top: 0;
+}
+
+@media (max-width: 1024px) {
+    .wdCards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .wdSidebar {
+        display: none;
+    }
+
+    .wd {
+        flex-direction: column;
+    }
+
+    .wdContent {
+        padding: 14px;
+        padding-bottom: 100px;
+    }
+
+    .wdContent h1 {
+        font-size: 26px;
+        margin-bottom: 14px;
+    }
+
+    .wdCards {
+        grid-template-columns: 1fr;
+    }
+
+    .wdCard {
+        padding: 15px;
+    }
+
+    .mobileBottomNav {
+        display: grid;
+    }
+
+    .wdTable {
+        min-width: 0;
+        background: transparent;
+    }
+
+    .wdTable thead {
+        display: none;
+    }
+
+    .wdTable,
+    .wdTable tbody,
+    .wdTable tr,
+    .wdTable td {
+        display: block;
+        width: 100%;
+    }
+
+    .wdTable tr {
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 12px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, .05);
+    }
+
+    .wdTable td {
+        border-bottom: none;
+        padding: 8px 0;
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .wdTable td::before {
+        font-weight: 900;
+        color: #555;
+    }
+
+    .wdTable td:nth-child(1)::before {
+        content: "Customer";
+    }
+
+    .wdTable td:nth-child(2)::before {
+        content: "Phone";
+    }
+
+    .wdTable td:nth-child(3)::before {
+        content: "Address";
+    }
+
+    .wdTable td:nth-child(4)::before {
+        content: "Payment";
+    }
+
+    .wdTable td:nth-child(5)::before {
+        content: "Price";
+    }
+
+    .wdTable td:nth-child(6)::before {
+        content: "Date";
+    }
+
+    .wdTable td:nth-child(7)::before {
+        content: "Time";
+    }
+
+    .wdTable td:nth-child(8)::before {
+        content: "Status";
+    }
+
+    .wdTable td:nth-child(9)::before {
+        content: "Actions";
+    }
+
+    .wdTable td>div[style*="display: flex"] {
+        flex-wrap: wrap;
+    }
+
+    .acceptBtn,
+    .rejectBtn,
+    .completeBtn,
+    .cancelBtn {
+        flex: 1 1 96px;
+        min-width: 0;
+    }
+
+    .filterBar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filterBtn {
+        flex: 0 0 auto;
+    }
+
+    .messagesLayout {
+        grid-template-columns: 1fr;
+    }
+
+    .messageReplyForm {
+        align-items: stretch;
+    }
+
+    .messageReplyForm button {
+        min-width: 76px;
+    }
+}
+
+@media (max-width: 430px) {
+    .wdContent {
+        padding: 10px;
+        padding-bottom: 96px;
+    }
+
+    .wdPanel {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .wdCards {
+        gap: 10px;
+    }
+
+    .wdCard {
+        min-height: 88px;
+    }
+
+    .wdTable td {
+        grid-template-columns: 82px minmax(0, 1fr);
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .mobileBottomNav {
+        width: calc(100% - 12px);
+        padding: 6px;
+        border-radius: 18px;
+    }
+
+    .mobileBottomNav button {
+        font-size: 14px;
+        min-height: 44px;
+    }
+
+    .mobileBottomNav span {
+        font-size: 9px;
+    }
+}
+
+.fc {
+    width: 100%;
+    max-width: 100%;
+}
+
+.fc-view-harness {
+    overflow-x: auto;
+}
+
+.fc-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fc-toolbar-title {
+    font-size: 14px;
+}
+
+.fc-button {
+    padding: 5px 8px;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+
+    .fc {
+        font-size: 11px;
+    }
+
+    .fc-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fc-daygrid-day {
+        min-width: 80px;
+    }
+
+    .fc-timegrid-slot {
+        height: 40px;
+    }
+}
