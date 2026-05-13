@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./LandingPage.css";
 import logo from "../assets/logo.png";
-import { SocialIcon } from 'react-social-icons'
+import SiteFooter from "../components/SiteFooter";
 export default function LandingPage() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -476,40 +476,8 @@ export default function LandingPage() {
                     </div>
                 </div>
 
-                <div className="lpFooterSpace" />
             </div>
-            <div className="footer">
-
-                <h2>TAZABEET</h2>
-                <p>Your trusted partner for home services in Alexandria.</p>
-
-                <div className="footerIcons">
-                    <div><SocialIcon url="https://facebook.com" /></div>
-                    <div><SocialIcon url="https://twitter.com" /></div>
-                    <div><SocialIcon url="https://instagram.com" /></div>
-                </div>
-
-                <div className="footerGrid">
-                    <div>
-                        <h4>Quick Links</h4>
-                        <p onClick={() => navigate("/")}>Home</p>
-                        <p onClick={() => navigate("/services")}>Services</p>
-                        <p onClick={() => navigate("/ai-chat")}>AI Assistant</p>
-                    </div>
-
-                    <div>
-                        <h4>Contact</h4>
-                        <p>📍 Alexandria</p>
-                        <p>📞 +20 100 123 4567</p>
-                        <p>✉ help@tazabeet.com</p>
-                    </div>
-                </div>
-
-                <div className="footerBottom">
-                    © 2026 TAZABEET — Designed with ❤️ in Alexandria
-                </div>
-
-            </div>
+            <SiteFooter />
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
                 <button
                     className={location.pathname === "/" ? "active" : ""}

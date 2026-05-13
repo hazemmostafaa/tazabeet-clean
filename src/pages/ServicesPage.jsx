@@ -16,6 +16,7 @@ import tilingimg from "../components/images/tiling.jpeg";
 import gypsumimg from "../components/images/gypsum.jpeg";
 import appliancesimg from "../components/images/appliances.jpeg";
 import MapPicker from "../components/MapPicker";
+import SiteFooter from "../components/SiteFooter";
 import "leaflet/dist/leaflet.css";
 
 export default function ServicesPage() {
@@ -763,40 +764,7 @@ export default function ServicesPage() {
                 </div>
             )}
 
-
-            <div className="lpFooterSpace" />
-            <div className="footer">
-
-                <h2>TAZABEET</h2>
-                <p>Your trusted partner for home services in Alexandria.</p>
-
-                <div className="footerIcons">
-                    <div>🌐</div>
-                    <div>📸</div>
-                    <div>📘</div>
-                </div>
-
-                <div className="footerGrid">
-                    <div>
-                        <h4>Quick Links</h4>
-                        <p onClick={() => navigate("/")}>Home</p>
-                        <p onClick={() => navigate("/services")}>Services</p>
-                        <p onClick={() => navigate("/ai-chat")}>AI Assistant</p>
-                    </div>
-
-                    <div>
-                        <h4>Contact</h4>
-                        <p>📍 Alexandria</p>
-                        <p>📞 +20 100 123 4567</p>
-                        <p>✉ help@tazabeet.com</p>
-                    </div>
-                </div>
-
-                <div className="footerBottom">
-                    © 2026 TAZABEET — Designed with ❤️ in Alexandria
-                </div>
-
-            </div>
+            <SiteFooter />
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
                 <button
                     className={location.pathname === "/" ? "active" : ""}
