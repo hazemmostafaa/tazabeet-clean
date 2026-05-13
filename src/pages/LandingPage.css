@@ -3037,3 +3037,37 @@ select {
         height: 50px !important;
     }
 }
+
+@media (max-width: 768px) {
+    .lpTopBtns .lpBtn.dark,
+    .lpTopBtns .lpBtn.dark:hover {
+        background: #000 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000 !important;
+    }
+
+    .lpTopBtns .lpBtn.ghost,
+    .lpTopBtns .lpBtn.ghost:hover {
+        background: rgba(255, 255, 255, 0.45) !important;
+        color: #111 !important;
+        -webkit-text-fill-color: #111 !important;
+    }
+
+    .bookingStep .confirmBtn,
+    .modalActions .confirmBtn,
+    .modalActions.split .confirmBtn {
+        background: #000 !important;
+        border-color: #000 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000 !important;
+    }
+
+    .bookingStep .cancelBtn,
+    .modalActions .cancelBtn,
+    .modalActions.split .cancelBtn {
+        background: #f1f1f1 !important;
+        border-color: #ddd !important;
+        color: #111 !important;
+        -webkit-text-fill-color: #111 !important;
+    }
+}
