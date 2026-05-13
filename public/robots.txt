@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /worker-dashboard
+Disallow: /customer-profile
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /ai-chat
+
+Sitemap: https://tazabeet.netlify.app/sitemap.xml

@@ -20,6 +20,7 @@ import ContactPage from "./pages/ContactPage";
 
 import WorkerProfile from "./pages/WorkerProfile";
 import { bindSessionActivity } from "./utils/sessionSecurity";
+import SeoManager from "./components/SeoManager";
 
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
 
   return (
     <>
+      <SeoManager />
       <Routes>
         <Route path="/worker/:id" element={<WorkerProfile />} />
 
