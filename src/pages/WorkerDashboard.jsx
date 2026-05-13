@@ -515,6 +515,7 @@ function JobsTable({ jobs, refreshJobs, refreshWallet, language, t }) {
                         <th>{t("worker.table.customer")}</th>
                         <th>{t("worker.table.phone")}</th>
                         <th>{t("worker.table.address")}</th>
+                        <th>{t("worker.table.issue")}</th>
                         <th>{t("worker.table.payment")}</th>
                         <th>{t("worker.table.price")}</th>
                         <th>{t("worker.table.date")}</th>
@@ -541,26 +542,45 @@ function JobsTable({ jobs, refreshJobs, refreshWallet, language, t }) {
                                             📍 {Number(jobLocation.lat).toFixed(4)}, {Number(jobLocation.lng).toFixed(4)}
                                         </div>
                                     )}
-
-                                    {j.description && (
-                                        <div style={{ marginTop: 6, fontSize: 12, color: "#555" }}>
+                                </td>
+                                <td data-label={t("worker.table.issue")}>
+                                    {j.description ? (
+                                        <div className="jobIssueText">
                                             {j.description}
                                         </div>
+                                    ) : (
+                                        <span className="jobIssueEmpty">{t("common.notAvailable")}</span>
                                     )}
 
-                                    {j.bookingMedia?.length > 0 && (
-                                        <div className="jobMediaList">
-                                            {j.bookingMedia.map((file, index) => (
-                                                <a
-                                                    key={`${file.name}-${index}`}
-                                                    href={file.url}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    {file.type === "video" ? t("common.video") : t("common.photo")} {index + 1}
-                                                </a>
-                                            ))}
+                                    {j.bookingMedia?.length > 0 ? (
+                                        <div className="jobMediaGrid">
+                                            {j.bookingMedia.map((file, index) => {
+                                                const mediaUrl = typeof file === "string" ? file : file.url;
+                                                const mediaType = typeof file === "string" ? "" : file.type;
+                                                const mediaName = typeof file === "string" ? "" : file.name;
+                                                const isVideo = mediaType === "video" || mediaType?.startsWith("video");
+
+                                                return (
+                                                    <a
+                                                        key={`${mediaName || mediaUrl}-${index}`}
+                                                        className="jobMediaPreview"
+                                                        href={mediaUrl}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        title={mediaName || `${isVideo ? t("common.video") : t("common.photo")} ${index + 1}`}
+                                                    >
+                                                        {isVideo ? (
+                                                            <video src={mediaUrl} muted playsInline />
+                                                        ) : (
+                                                            <img src={mediaUrl} alt={mediaName || `${t("common.photo")} ${index + 1}`} />
+                                                        )}
+                                                        <span>{isVideo ? t("common.video") : t("common.photo")} {index + 1}</span>
+                                                    </a>
+                                                );
+                                            })}
                                         </div>
+                                    ) : (
+                                        <div className="jobMediaEmpty">{t("servicesPage.no")} {t("servicesPage.files")}</div>
                                     )}
                                 </td>
                                 <td data-label={t("worker.table.payment")}>{formatPaymentType(language, j.paymentType)}</td>
