@@ -4,16 +4,14 @@ import { toast } from "react-toastify";
 import "./LandingPage.css";
 import logo from "../assets/logo.png";
 import SiteFooter from "../components/SiteFooter";
+import { formatServiceName, useDashboardLanguage } from "../utils/dashboardI18n";
 export default function LandingPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const reviews = [
-        { name: "Sara", text: "Great service! The plumber arrived on time and fixed my leak quickly.", rating: 5 },
-        { name: "Omar", text: "The electrician was very professional and solved our power issue efficiently.", rating: 4.5 },
-        { name: "Laila", text: "I booked a cleaning service, and they did an amazing job. My house has never been cleaner!", rating: 4.8 },
-    ];
+    const { language, isArabic, setLanguage, t } = useDashboardLanguage();
+    const [reviews, setReviews] = useState([]);
     const [showNav, setShowNav] = useState(true);
-    const [selectedNeed, setSelectedNeed] = useState("Leaking water");
+    const [selectedNeed, setSelectedNeed] = useState("leaking");
     const [gameStarted, setGameStarted] = useState(false);
     const [selectedGameCard, setSelectedGameCard] = useState(null);
     const [promoPrize, setPromoPrize] = useState(() => localStorage.getItem("promo_code") || "");
@@ -37,6 +35,20 @@ export default function LandingPage() {
 
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    useEffect(() => {
+        async function fetchReviews() {
+            try {
+                const res = await fetch("https://tazabeet-backend.vibenest.net/api/schedule/public-reviews");
+                const data = await res.json();
+                if (res.ok) setReviews(Array.isArray(data) ? data : []);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        fetchReviews();
+    }, []);
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const isCustomerLoggedIn = !!token && role === "customer";
@@ -59,13 +71,13 @@ export default function LandingPage() {
     );
 
     const quickNeeds = [
-        { label: "Leaking water", service: "Plumbing", hint: "Upload a photo and get an estimate range before booking." },
-        { label: "Power problem", service: "Electrical", hint: "Get safe first steps, then book a verified electrician." },
-        { label: "AC not cooling", service: "AC Repair", hint: "Find available AC workers and compare ratings." },
-        { label: "Deep cleaning", service: "Cleaning", hint: "Pick a time and send photos for better pricing." },
+        { key: "leaking", label: language === "ar" ? "تسريب مياه" : "Leaking water", service: "Plumbing", hint: language === "ar" ? "ارفع صورة واحصل على تقدير للسعر قبل الحجز." : "Upload a photo and get an estimate range before booking." },
+        { key: "power", label: language === "ar" ? "مشكلة كهرباء" : "Power problem", service: "Electrical", hint: language === "ar" ? "احصل على خطوات أمان سريعة ثم احجز كهربائيا موثقا." : "Get safe first steps, then book a verified electrician." },
+        { key: "ac", label: language === "ar" ? "التكييف لا يبرد" : "AC not cooling", service: "AC Repair", hint: language === "ar" ? "اعثر على عمال تكييف متاحين وقارن التقييمات." : "Find available AC workers and compare ratings." },
+        { key: "cleaning", label: language === "ar" ? "تنظيف عميق" : "Deep cleaning", service: "Cleaning", hint: language === "ar" ? "اختر موعدا وارسل صورا لتسعير أفضل." : "Pick a time and send photos for better pricing." },
     ];
 
-    const selectedNeedData = quickNeeds.find((item) => item.label === selectedNeed) || quickNeeds[0];
+    const selectedNeedData = quickNeeds.find((item) => item.key === selectedNeed) || quickNeeds[0];
 
     const promoGameCards = [
         { label: "Quick Fix", code: "FIX10", discount: "10%" },
@@ -102,7 +114,7 @@ export default function LandingPage() {
         const role = localStorage.getItem("role");
 
         if (!token || role !== "customer") {
-            toast.info("You have to log in first.");
+            toast.info(t("landing.loginFirst"));
             navigate("/login", { state: { tab: "login", needLogin: true } });
             return false;
         }
@@ -120,7 +132,7 @@ export default function LandingPage() {
         setPromoPrize(prize.code);
         localStorage.setItem("promo_code", prize.code);
         localStorage.setItem("promo_discount", prize.discount);
-        toast.success(`You won promo code ${prize.code}`);
+        toast.success(`${t("landing.promoWon")} ${prize.code}`);
     }
 
     function resetPromoGame() {
@@ -129,7 +141,7 @@ export default function LandingPage() {
     }
 
     return (
-        <div className="lp">
+        <div className={`lp ${isArabic ? "rtl" : ""}`} dir={isArabic ? "rtl" : "ltr"}>
             <div className="lpTopLanding">
                 <button
                     className="lpBrand"
@@ -142,7 +154,7 @@ export default function LandingPage() {
                 </button>
 
                 <div className="lpDesktopNav">
-                    <button type="button" onClick={() => navigate("/")}>Home</button>
+                    <button type="button" onClick={() => navigate("/")}>{t("site.home")}</button>
 
                     <button
                         type="button"
@@ -153,30 +165,37 @@ export default function LandingPage() {
                             else navigate("/login", { state: { tab: "login", needLogin: true } });
                         }}
                     >
-                        Services
+                        {t("site.services")}
                     </button>
 
-                    <button type="button" onClick={() => navigate("/ai-chat")}>AI Chat</button>
-                    <button type="button" onClick={() => navigate("/contact")}>Contact</button>
+                    <button type="button" onClick={() => navigate("/ai-chat")}>{t("site.aiChat")}</button>
+                    <button type="button" onClick={() => navigate("/contact")}>{t("site.contact")}</button>
                 </div>
 
                 <div className="lpTopBtns">
+                    <button
+                        type="button"
+                        className="dashboardLangToggle"
+                        onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                    >
+                        🌐 {t("common.languageToggle")}
+                    </button>
                     {isCustomerLoggedIn ? (
                         <button
                             className="lpProfileBtn"
                             type="button"
                             onClick={() => navigate("/customer-profile")}
-                            title="Profile"
+                            title={t("site.profile")}
                         >
                             <span className="lpProfileCircle">👤</span>
                         </button>
                     ) : (
                         <>
                             <button className="lpBtn ghost" onClick={goCustomerLogin} type="button">
-                                Log in
+                                {t("site.login")}
                             </button>
                             <button className="lpBtn dark" onClick={goWorker} type="button">
-                                Become a Worker
+                                {t("site.becomeWorker")}
                             </button>
                         </>
                     )}
@@ -194,7 +213,7 @@ export default function LandingPage() {
                             fontWeight: 900,
                         }}
                     >
-                        You have to login to access that page.
+                        {t("landing.loginRequired")}
                     </div>
                 </div>
             ) : null}
@@ -202,15 +221,15 @@ export default function LandingPage() {
             <div className="lpHero">
                 <div className="lpHeroInner">
                     <div className="lpHeroCopy">
-                        <div className="lpLoc">📍 Alexandria, Egypt</div>
+                        <div className="lpLoc">📍 {t("landing.location")}</div>
 
                         <div className="lpTitle">
-                            <div className="lpTitleA">Book trusted</div>
-                            <div className="lpTitleB">Home Services</div>
+                            <div className="lpTitleA">{t("landing.titleA")}</div>
+                            <div className="lpTitleB">{t("landing.titleB")}</div>
                         </div>
 
                         <p className="lpHeroText">
-                            Tell us the issue, upload a photo during booking, and get a clear estimated price range before the worker sends the final quote.
+                            {t("landing.heroText")}
                         </p>
 
                         <div className="lpSearch">
@@ -219,39 +238,39 @@ export default function LandingPage() {
                                 value={q}
                                 onChange={(e) => setQ(e.target.value)}
                                 className="lpSearchInput"
-                                placeholder="What do you need help with?"
+                                placeholder={t("landing.searchPlaceholder")}
                             />
                             <button className="lpSearchBtn" type="button" onClick={() => goCustomerSignup()}>
-                                Search
+                                {t("landing.search")}
                             </button>
                         </div>
 
                         <div className="lpHeroActions">
                             <button type="button" onClick={() => requireCustomerLogin(() => navigate("/services"))}>
-                                Book now
+                                {t("landing.bookNow")}
                             </button>
                             <button type="button" onClick={() => requireCustomerLogin(() => navigate("/ai-chat"))}>
-                                Diagnose first
+                                {t("landing.diagnoseFirst")}
                             </button>
                         </div>
                     </div>
 
                     <div className="lpHeroPanel">
                         <div className="lpPanelHeader">
-                            <span>Today</span>
-                            <b>Smart booking</b>
+                            <span>{t("landing.today")}</span>
+                            <b>{t("landing.smartBooking")}</b>
                         </div>
 
                         <div className="lpPanelSteps">
-                            <div><b>1</b><span>Choose service</span></div>
-                            <div><b>2</b><span>Upload photo/video</span></div>
-                            <div><b>3</b><span>Approve final price</span></div>
+                            <div><b>1</b><span>{t("landing.chooseService")}</span></div>
+                            <div><b>2</b><span>{t("landing.uploadMedia")}</span></div>
+                            <div><b>3</b><span>{t("landing.approveFinalPrice")}</span></div>
                         </div>
 
                         <div className="lpHeroStats">
-                            <div><b>12</b><span>services</span></div>
-                            <div><b>24/7</b><span>urgent help</span></div>
-                            <div><b>EGP</b><span>price range</span></div>
+                            <div><b>12</b><span>{t("landing.servicesCount")}</span></div>
+                            <div><b>24/7</b><span>{t("landing.urgentHelp")}</span></div>
+                            <div><b>{t("common.egp")}</b><span>{t("landing.priceRange")}</span></div>
                         </div>
                     </div>
                 </div>
@@ -260,18 +279,18 @@ export default function LandingPage() {
             <div className="lpBody">
                 <section className="lpFinder">
                     <div>
-                        <span className="lpSectionKicker">Start here</span>
-                        <h2>What is happening at home?</h2>
-                        <p>Tap a common issue and we’ll guide you to the right service.</p>
+                        <span className="lpSectionKicker">{t("landing.startHere")}</span>
+                        <h2>{t("landing.issueTitle")}</h2>
+                        <p>{t("landing.issueText")}</p>
                     </div>
 
                     <div className="lpNeedGrid">
                         {quickNeeds.map((item) => (
                             <button
                                 type="button"
-                                key={item.label}
-                                className={selectedNeed === item.label ? "active" : ""}
-                                onClick={() => setSelectedNeed(item.label)}
+                                key={item.key}
+                                className={selectedNeed === item.key ? "active" : ""}
+                                onClick={() => setSelectedNeed(item.key)}
                             >
                                 {item.label}
                             </button>
@@ -280,18 +299,18 @@ export default function LandingPage() {
 
                     <div className="lpNeedResult">
                         <div>
-                            <span>Recommended service</span>
-                            <b>{selectedNeedData.service}</b>
+                            <span>{t("landing.recommendedService")}</span>
+                            <b>{formatServiceName(language, selectedNeedData.service)}</b>
                             <p>{selectedNeedData.hint}</p>
                         </div>
                         <button type="button" onClick={() => goCustomerSignup(selectedNeedData.service)}>
-                            Continue
+                            {t("landing.continue")}
                         </button>
                     </div>
                 </section>
 
                 <div className="lpRow">
-                    <div className="lpH2">Categories</div>
+                    <div className="lpH2">{t("landing.categories")}</div>
 
                     <button
                         className="lpLink"
@@ -303,7 +322,7 @@ export default function LandingPage() {
                             else navigate("/login", { state: { tab: "login", needLogin: true } });
                         }}
                     >
-                        See All
+                        {t("landing.seeAll")}
                     </button>
                 </div>
 
@@ -314,56 +333,56 @@ export default function LandingPage() {
                             className="lpCat"
                             type="button"
                             onClick={() => goCustomerSignup(c.label)}
-                            title={c.label}
+                            title={formatServiceName(language, c.label)}
                         >
                             <div className="lpCatIcon">{c.icon}</div>
-                            <div className="lpCatLabel">{c.label}</div>
+                            <div className="lpCatLabel">{formatServiceName(language, c.label)}</div>
                         </button>
                     ))}
                 </div>
 
                 <div className="lpTrustStrip">
-                    <div><b>Verified workers</b><span>Ratings, reviews, and profiles before you book.</span></div>
-                    <div><b>Photo pricing</b><span>Upload media so the estimate is closer to the real job.</span></div>
-                    <div><b>Admin oversight</b><span>Messages and activity can be monitored for safety.</span></div>
+                    <div><b>{t("landing.verifiedWorkers")}</b><span>{t("landing.verifiedWorkersText")}</span></div>
+                    <div><b>{t("landing.photoPricing")}</b><span>{t("landing.photoPricingText")}</span></div>
+                    <div><b>{t("landing.adminOversight")}</b><span>{t("landing.adminOversightText")}</span></div>
                 </div>
 
                 <section className="lpAbout">
                     <div>
-                        <span className="lpSectionKicker">About TAZABEET</span>
-                        <h2>Built for safer home services in Alexandria</h2>
+                        <span className="lpSectionKicker">{t("landing.aboutKicker")}</span>
+                        <h2>{t("landing.aboutTitle")}</h2>
                         <p>
-                            TAZABEET connects customers with trusted local workers through clear booking steps, ratings, monitored messages, price estimates, and final quote approval.
+                            {t("landing.aboutText")}
                         </p>
                     </div>
                     <div className="lpAboutGrid">
-                        <div><b>For customers</b><span>Find the right service, upload job photos, and approve the final price.</span></div>
-                        <div><b>For workers</b><span>Manage schedules, show previous work, and build trust through reviews.</span></div>
+                        <div><b>{t("landing.forCustomers")}</b><span>{t("landing.forCustomersText")}</span></div>
+                        <div><b>{t("landing.forWorkers")}</b><span>{t("landing.forWorkersText")}</span></div>
                     </div>
                 </section>
 
                 <div className="lpPromo">
                     <div className="lpPromoLeft">
-                        <div className="lpBadge">New</div>
-                        <div className="lpPromoTitle">Not sure what the problem is?</div>
-                        <div className="lpPromoSub">Use the AI chat for quick safe steps until the worker arrives.</div>
+                        <div className="lpBadge">{t("landing.newBadge")}</div>
+                        <div className="lpPromoTitle">{t("landing.aiTitle")}</div>
+                        <div className="lpPromoSub">{t("landing.aiText")}</div>
                         <button className="lpPromoBtn" type="button" onClick={() => requireCustomerLogin(() => navigate("/ai-chat"))}>
-                            Open AI Chat
+                            {t("landing.openAi")}
                         </button>
                     </div>
                     <div className="lpPromoRight">
                         <div>
-                            <b>Safety first</b>
-                            <span>Leaks, sparks, AC issues, appliances, and more.</span>
+                            <b>{t("landing.safetyFirst")}</b>
+                            <span>{t("landing.safetyText")}</span>
                         </div>
                     </div>
                 </div>
 
                 <section className="lpGame">
                     <div className="lpGameIntro">
-                        <span className="lpSectionKicker">Promo game</span>
-                        <h2>Pick a card and win a booking discount</h2>
-                        <p>Win once, then use the promo code in the booking summary before confirming your service.</p>
+                        <span className="lpSectionKicker">{t("landing.promoKicker")}</span>
+                        <h2>{t("landing.promoTitle")}</h2>
+                        <p>{t("landing.promoText")}</p>
                     </div>
 
                     <div className="lpGameCards">
@@ -384,52 +403,54 @@ export default function LandingPage() {
                         {promoPrize ? (
                             <>
                                 <div>
-                                    Your promo code: <b>{promoPrize}</b>
+                                    {t("landing.promoCode")}: <b>{promoPrize}</b>
                                 </div>
                                 <button type="button" onClick={() => requireCustomerLogin(() => navigate("/services"))}>
-                                    Use code
+                                    {t("landing.useCode")}
                                 </button>
                                 <button type="button" onClick={resetPromoGame}>
-                                    Play again
+                                    {t("landing.playAgain")}
                                 </button>
                             </>
                         ) : (
-                            <span>Choose one card to reveal your discount.</span>
+                            <span>{t("landing.chooseCard")}</span>
                         )}
                     </div>
                 </section>
 
                 <div className="lpHow">
                     <div>
-                        <span className="lpSectionKicker">How it works</span>
-                        <h2>Book with less guessing</h2>
+                        <span className="lpSectionKicker">{t("landing.howKicker")}</span>
+                        <h2>{t("landing.howTitle")}</h2>
                     </div>
 
                     <div className="lpHowGrid">
-                        <div><b>Describe</b><span>Add address, notes, and photos.</span></div>
-                        <div><b>Estimate</b><span>See a service price range before booking.</span></div>
-                        <div><b>Approve</b><span>Worker sends final price, you accept or decline.</span></div>
+                        <div><b>{t("landing.describe")}</b><span>{t("landing.describeText")}</span></div>
+                        <div><b>{t("landing.estimate")}</b><span>{t("landing.estimateText")}</span></div>
+                        <div><b>{t("landing.approve")}</b><span>{t("landing.approveText")}</span></div>
                     </div>
                 </div>
 
                 <div className="lpH2" style={{ marginTop: 26 }}>
-                    Top Rated in Alexandria
+                    {t("landing.topRated")}
                 </div>
 
                 <div className="lpTopRated">
-                    <RatedCard name="Ahmed" job="Plumber" rating="4.9" />
-                    <RatedCard name="Mona" job="Electrician" rating="4.8" />
-                    <RatedCard name="Khaled" job="AC Technician" rating="4.7" />
+                    <RatedCard name="Ahmed" job={formatServiceName(language, "Plumbing")} rating="4.9" />
+                    <RatedCard name="Mona" job={formatServiceName(language, "Electrical")} rating="4.8" />
+                    <RatedCard name="Khaled" job={formatServiceName(language, "AC Repair")} rating="4.7" />
                 </div>
                 <div className="reviewsWrapper">
 
 
                     <div className="reviewsSection">
-                        <h2 className="reviewsTitle">Customer Reviews</h2>
+                        <h2 className="reviewsTitle">{t("landing.reviews")}</h2>
 
                         <div className="reviewsWrapper">
-                            {reviews.map((review, index) => (
-                                <div className="reviewCard" key={index}>
+                            {reviews.length === 0 ? (
+                                <p>{t("landing.noReviews")}</p>
+                            ) : reviews.map((review, index) => (
+                                <div className="reviewCard" key={review._id || index}>
 
                                     <div className="reviewTop">
                                         <div className="reviewAvatar">
@@ -438,7 +459,7 @@ export default function LandingPage() {
 
                                         <div>
                                             <h3>{review.name}</h3>
-                                            <p className="reviewRole">Verified Customer</p>
+                                            <p className="reviewRole">{t("landing.verifiedCustomer")}</p>
                                         </div>
                                     </div>
 
@@ -456,51 +477,51 @@ export default function LandingPage() {
                     </div>
                 </div>
                 <div className="lpCTA">
-                    <div className="lpCTATitle">Need a service today?</div>
-                    <div className="lpCTASub">Create a customer account and book in minutes.</div>
+                    <div className="lpCTATitle">{t("landing.ctaTitle")}</div>
+                    <div className="lpCTASub">{t("landing.ctaText")}</div>
                     <div className="lpCTAButtons">
                         <button
                             className="lpCTAButton"
                             type="button"
                             onClick={() => requireCustomerLogin(() => navigate("/services"))}
                         >
-                            Book a Service
+                            {t("landing.bookService")}
                         </button>
                         <button
                             className="lpCTAButton secondary"
                             type="button"
                             onClick={() => navigate("/contact")}
                         >
-                            Contact Us
+                            {t("landing.contactUs")}
                         </button>
                     </div>
                 </div>
 
             </div>
-            <SiteFooter />
+            <SiteFooter language={language} t={t} />
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
                 <button
                     className={location.pathname === "/" ? "active" : ""}
                     onClick={() => navigate("/")}>
                     <span>🏠</span>
-                    <p>Home</p>
+                    <p>{t("site.home")}</p>
                 </button>
 
                 <button className={location.pathname === "/services" ? "active" : ""} onClick={() => navigate("/services")}>
                     <span>🧰</span>
-                    <p>Services</p>
+                    <p>{t("site.services")}</p>
                 </button>
 
                 <button className={location.pathname === "/ai-chat" ? "active" : ""} onClick={() => navigate("/ai-chat")}>
                     <span>💬</span>
-                    <p>Chat</p>
+                    <p>{t("site.chat")}</p>
                 </button>
 
                 <button
                     className={location.pathname === "/contact" ? "active" : ""}
                     onClick={() => navigate("/contact")}>
                     <span>📞</span>
-                    <p>Contact</p>
+                    <p>{t("site.contact")}</p>
                 </button>
             </div>
         </div>

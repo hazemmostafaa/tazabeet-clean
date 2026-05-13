@@ -5,6 +5,14 @@
     padding: 0 16px 90px;
 }
 
+.aiWrapper.rtl {
+    direction: rtl;
+}
+
+.aiWrapper.rtl input {
+    text-align: right;
+}
+
 .aiHeader {
     background: #111;
     color: white;
@@ -24,6 +32,26 @@
     border-radius: 20px;
     font-weight: bold;
     height: fit-content;
+    white-space: nowrap;
+}
+
+.aiHeaderActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.aiLangToggle,
+.lpDesktopNav .dashboardLangToggle {
+    border: 1px solid rgba(0, 0, 0, .14);
+    background: #fff;
+    color: #111;
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 900;
     white-space: nowrap;
 }
 
@@ -336,6 +364,8 @@
         border-radius: 14px;
         padding: 16px;
         align-items: flex-start;
+        display: grid;
+        grid-template-columns: 1fr;
     }
 
     .aiHeader h2 {
@@ -351,6 +381,10 @@
         border-radius: 12px;
         padding: 10px 12px;
         font-size: 13px;
+    }
+
+    .aiHeaderActions {
+        justify-content: flex-start;
     }
 
     .aiChatBox {

@@ -17,11 +17,13 @@ import gypsumimg from "../components/images/gypsum.jpeg";
 import appliancesimg from "../components/images/appliances.jpeg";
 import MapPicker from "../components/MapPicker";
 import SiteFooter from "../components/SiteFooter";
+import { dashboardLocale, formatCurrency, formatPaymentType, formatServiceName, formatSeverity, useDashboardLanguage } from "../utils/dashboardI18n";
 import "leaflet/dist/leaflet.css";
 
 export default function ServicesPage() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { language, isArabic, setLanguage, t } = useDashboardLanguage();
     const [showNav, setShowNav] = useState(true);
     const [locationCoords, setLocationCoords] = useState(null);
     const [address, setAddress] = useState("");
@@ -72,6 +74,7 @@ export default function ServicesPage() {
     const [issueDescription, setIssueDescription] = useState("");
     const [bookingFiles, setBookingFiles] = useState([]);
     const [promoCode, setPromoCode] = useState(() => localStorage.getItem("promo_code") || "");
+    const [promoInfo, setPromoInfo] = useState(null);
 
     const services = [
         "Plumbing", "Electrical", "Cleaning", "Painting", "Carpentry",
@@ -143,10 +146,7 @@ export default function ServicesPage() {
 
     function getPromoDiscount(code) {
         const normalized = code.trim().toUpperCase();
-        if (normalized === "FIX10") return 10;
-        if (normalized === "TAZA15") return 15;
-        if (normalized === "WIN20") return 20;
-        return 0;
+        return promoInfo?.code === normalized ? promoInfo.discountPercent : 0;
     }
 
     function applyPromo(estimate, code) {
@@ -167,6 +167,33 @@ export default function ServicesPage() {
         ? estimatePrice(selectedService, issueDescription, bookingFiles)
         : null;
     const estimatePreview = applyPromo(rawEstimatePreview, promoCode);
+
+    async function validatePromoCode() {
+        const normalized = promoCode.trim().toUpperCase();
+        if (!normalized) return;
+
+        try {
+            const res = await fetch(`https://tazabeet-backend.vibenest.net/api/schedule/promo/${normalized}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setPromoInfo(null);
+                return toast.error(res.status === 409 ? t("servicesPage.usedPromo") : data.message || t("servicesPage.invalidPromo"));
+            }
+
+            setPromoInfo(data);
+            setPromoCode(data.code);
+            localStorage.setItem("promo_code", data.code);
+            toast.success(`${data.discountPercent}% ${t("servicesPage.promoApplied")}`);
+        } catch (err) {
+            console.log(err);
+            toast.error(t("servicesPage.invalidPromo"));
+        }
+    }
 
     useEffect(() => {
         fetchWorkers();
@@ -249,10 +276,10 @@ export default function ServicesPage() {
     }
 
     async function handleConfirmBooking() {
-        if (!selectedSlot) return toast.error("Select a slot.");
+        if (!selectedSlot) return toast.error(t("servicesPage.selectSlot"));
         const bookingAddress = address.trim();
 
-        if (!bookingAddress) return toast.error("Enter your address.");
+        if (!bookingAddress) return toast.error(t("servicesPage.enterAddress"));
 
         const bookingLocation = locationCoords
             ? {
@@ -284,12 +311,12 @@ export default function ServicesPage() {
             );
 
             const data = await res.json();
-            if (!res.ok) return toast.error(data.message || "Booking failed.");
+            if (!res.ok) return toast.error(data.message || t("servicesPage.bookingFailed"));
 
             const estimateText = data.estimatedPrice
-                ? ` Estimated ${data.estimatedPrice.min}-${data.estimatedPrice.max} ${data.estimatedPrice.currency}.`
+                ? ` ${t("customer.estimate")} ${data.estimatedPrice.min}-${data.estimatedPrice.max} ${formatCurrency(language, data.estimatedPrice.currency)}.`
                 : "";
-            toast.success(`Booking sent.${estimateText}`);
+            toast.success(`${t("servicesPage.bookingSent")}${estimateText}`);
 
             setSelectedService(null);
             setSelectedSlot(null);
@@ -301,6 +328,9 @@ export default function ServicesPage() {
             setAddressTouched(false);
             setIssueDescription("");
             setBookingFiles([]);
+            setPromoInfo(null);
+            setPromoCode("");
+            localStorage.removeItem("promo_code");
 
         } catch (err) {
             console.log(err);
@@ -327,7 +357,7 @@ export default function ServicesPage() {
         );
 
         if (validFiles.length !== files.length) {
-            toast.error("Only photos and videos are allowed.");
+            toast.error(t("servicesPage.photosOnly"));
         }
 
         setBookingFiles(validFiles.slice(0, 3));
@@ -338,7 +368,7 @@ export default function ServicesPage() {
         setAddressTouched(true);
 
         if (!address.trim()) {
-            toast.error("Enter your address.");
+            toast.error(t("servicesPage.enterAddress"));
             return;
         }
 
@@ -347,7 +377,7 @@ export default function ServicesPage() {
 
     function goToSummaryStep() {
         if (!selectedSlot) {
-            toast.error("Select a worker and time.");
+            toast.error(t("servicesPage.selectWorkerTime"));
             return;
         }
 
@@ -355,12 +385,13 @@ export default function ServicesPage() {
     }
 
     const filteredServices = services.filter((service) =>
-        service.toLowerCase().includes(serviceSearch.trim().toLowerCase())
+        service.toLowerCase().includes(serviceSearch.trim().toLowerCase()) ||
+        formatServiceName(language, service).toLowerCase().includes(serviceSearch.trim().toLowerCase())
     );
 
     return (
 
-        <div className="lp">
+        <div className={`lp ${isArabic ? "rtl" : ""}`} dir={isArabic ? "rtl" : "ltr"}>
 
 
             <div className="lpTopLanding">
@@ -370,14 +401,21 @@ export default function ServicesPage() {
                 </button>
 
                 <div className="lpDesktopNav">
-                    <button onClick={() => navigate("/")}>Home</button>
-                    <button className="active">Services</button>
-                    <button onClick={() => navigate("/ai-chat")}>AI Chat</button>
-                    <button onClick={() => navigate("/contact")}>Contact</button>
+                    <button onClick={() => navigate("/")}>{t("site.home")}</button>
+                    <button className="active">{t("site.services")}</button>
+                    <button onClick={() => navigate("/ai-chat")}>{t("site.aiChat")}</button>
+                    <button onClick={() => navigate("/contact")}>{t("site.contact")}</button>
                 </div>
 
 
                 <div className="lpTopBtns">
+                    <button
+                        type="button"
+                        className="dashboardLangToggle"
+                        onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                    >
+                        🌐 {t("common.languageToggle")}
+                    </button>
                     <button
                         className="lpProfileBtn"
                         onClick={() => navigate("/customer-profile")}
@@ -391,8 +429,8 @@ export default function ServicesPage() {
             <div className="lpHero">
                 <div className="lpHeroInner">
                     <div className="lpTitle">
-                        <div className="lpTitleA">Our Services</div>
-                        <div className="lpTitleB">Choose What You Need</div>
+                        <div className="lpTitleA">{t("servicesPage.heroA")}</div>
+                        <div className="lpTitleB">{t("servicesPage.heroB")}</div>
                     </div>
                 </div>
             </div>
@@ -401,14 +439,14 @@ export default function ServicesPage() {
             <div className="lpBody">
                 <div className="servicesToolbar">
                     <div>
-                        <h2>Available Services</h2>
-                        <p>Search by service and book the best available slot.</p>
+                        <h2>{t("servicesPage.availableServices")}</h2>
+                        <p>{t("servicesPage.searchHelp")}</p>
                     </div>
 
                     <input
                         value={serviceSearch}
                         onChange={(e) => setServiceSearch(e.target.value)}
-                        placeholder="Search services..."
+                        placeholder={t("servicesPage.searchPlaceholder")}
                     />
                 </div>
 
@@ -418,7 +456,7 @@ export default function ServicesPage() {
                         className={!serviceSearch ? "active" : ""}
                         onClick={() => setServiceSearch("")}
                     >
-                        All
+                        {t("servicesPage.all")}
                     </button>
                     {services.map((service) => (
                         <button
@@ -427,15 +465,15 @@ export default function ServicesPage() {
                             className={serviceSearch === service ? "active" : ""}
                             onClick={() => setServiceSearch(service)}
                         >
-                            {service}
+                            {formatServiceName(language, service)}
                         </button>
                     ))}
                 </div>
 
                 {filteredServices.length === 0 ? (
                     <div className="serviceEmpty">
-                        <b>No matching services.</b>
-                        <span>Try another keyword or browse all services.</span>
+                        <b>{t("servicesPage.noMatching")}</b>
+                        <span>{t("servicesPage.tryAnother")}</span>
                     </div>
                 ) : filteredServices.map((service, i) => {
 
@@ -449,12 +487,12 @@ export default function ServicesPage() {
                                 <img
                                     src={serviceImages[service]}
                                     className="serviceImg"
-                                    alt={service}
+                                    alt={formatServiceName(language, service)}
                                 />
                             </div>
 
                             <div className="serviceContent">
-                                <h3>{service}</h3>
+                                <h3>{formatServiceName(language, service)}</h3>
 
                                 {workers.length > 0 ? (
                                     worker?.feedbacks?.filter(r => r.review).length > 0 ? (
@@ -471,8 +509,8 @@ export default function ServicesPage() {
                                     ) : null
                                 ) : (
                                     <div className="serviceEmpty small">
-                                        <b>No previous workers yet.</b>
-                                        <span>Workers will appear here after they add this service.</span>
+                                        <b>{t("servicesPage.noPreviousWorkers")}</b>
+                                        <span>{t("servicesPage.workersLater")}</span>
                                     </div>
                                 )}
 
@@ -481,14 +519,14 @@ export default function ServicesPage() {
                                     onClick={() => openBooking(service)}
                                     disabled={!availableCount}
                                 >
-                                    {availableCount ? "Book Now" : "No slots available"}
+                                    {availableCount ? t("servicesPage.bookNow") : t("servicesPage.noSlots")}
                                 </button>
 
                                 {workers.length > 0 && (
                                     <div className="serviceWorkersBottom">
                                         <div className="serviceWorkerHeader">
-                                            <span>{workers.length} previous worker{workers.length === 1 ? "" : "s"}</span>
-                                            <small>{availableCount} available slot{availableCount === 1 ? "" : "s"}</small>
+                                            <span>{workers.length} {workers.length === 1 ? t("servicesPage.previousWorker") : t("servicesPage.previousWorkers")}</span>
+                                            <small>{availableCount} {availableCount === 1 ? t("servicesPage.availableSlot") : t("servicesPage.availableSlots")}</small>
                                         </div>
 
                                         <div className="serviceWorkersList">
@@ -507,7 +545,7 @@ export default function ServicesPage() {
                                                             {serviceWorker.name}
                                                         </div>
                                                         <div className="workerJob">
-                                                            {serviceWorker.completedJobs || 0} completed job{serviceWorker.completedJobs === 1 ? "" : "s"}
+                                                            {serviceWorker.completedJobs || 0} {serviceWorker.completedJobs === 1 ? t("servicesPage.completedJob") : t("servicesPage.completedJobs")}
                                                         </div>
                                                     </div>
                                                     <div className="rating">
@@ -546,8 +584,8 @@ export default function ServicesPage() {
 
                         <div className="bookingHeader">
                             <div>
-                                <span>Booking</span>
-                                <h3>{selectedService}</h3>
+                                <span>{t("servicesPage.booking")}</span>
+                                <h3>{formatServiceName(language, selectedService)}</h3>
                             </div>
                             <div className="bookingSteps">
                                 {[1, 2, 3].map((step) => (
@@ -569,16 +607,16 @@ export default function ServicesPage() {
 
                         {bookingStep === 1 && (
                             <div className="bookingStep">
-                                <label>Address</label>
+                                <label>{t("servicesPage.address")}</label>
                                 <input
                                     className={addressTouched && !address.trim() ? "fieldError" : ""}
-                                    placeholder="Enter your address"
+                                    placeholder={t("servicesPage.enterAddress")}
                                     value={address}
                                     onBlur={() => setAddressTouched(true)}
                                     onChange={(e) => setAddress(e.target.value)}
                                 />
                                 {addressTouched && !address.trim() && (
-                                    <div className="inlineError">Address is required.</div>
+                                    <div className="inlineError">{t("servicesPage.addressRequired")}</div>
                                 )}
 
                                 <button
@@ -586,7 +624,7 @@ export default function ServicesPage() {
                                     className="mapToggle"
                                     onClick={() => setShowMap((prev) => !prev)}
                                 >
-                                    {showMap ? "Hide map location" : "Add map location"}
+                                    {showMap ? t("servicesPage.hideMap") : t("servicesPage.addMap")}
                                 </button>
 
                                 {showMap && <MapPicker setLocation={setLocationCoords} />}
@@ -597,15 +635,15 @@ export default function ServicesPage() {
                                     </p>
                                 )}
 
-                                <label>Describe the work</label>
+                                <label>{t("servicesPage.describeWork")}</label>
                                 <textarea
                                     className="bookingTextarea"
-                                    placeholder="Example: water is leaking under the sink, pipe looks broken..."
+                                    placeholder={t("servicesPage.describePlaceholder")}
                                     value={issueDescription}
                                     onChange={(e) => setIssueDescription(e.target.value)}
                                 />
 
-                                <label>Photo or video of the problem</label>
+                                <label>{t("servicesPage.mediaLabel")}</label>
                                 <input
                                     type="file"
                                     accept="image/*,video/*"
@@ -623,7 +661,7 @@ export default function ServicesPage() {
 
                                 <div className="modalActions">
                                     <button className="confirmBtn" type="button" onClick={goToSlotStep}>
-                                        Continue
+                                        {t("servicesPage.continue")}
                                     </button>
                                 </div>
                             </div>
@@ -632,14 +670,14 @@ export default function ServicesPage() {
                         {bookingStep === 2 && (
                             <div className="bookingStep">
                                 <div className="stepTitleRow">
-                                    <h4>Choose worker and time</h4>
-                                    <span>{availableSlots.length} slots</span>
+                                    <h4>{t("servicesPage.chooseWorkerTime")}</h4>
+                                    <span>{availableSlots.length} {t("servicesPage.slots")}</span>
                                 </div>
 
                                 {availableSlots.length === 0 ? (
                                     <div className="serviceEmpty">
-                                        <b>No available slots right now.</b>
-                                        <span>Check again later or choose another service.</span>
+                                        <b>{t("servicesPage.noSlotsNow")}</b>
+                                        <span>{t("servicesPage.checkLater")}</span>
                                     </div>
                                 ) : (
                                     <div className="slotList">
@@ -653,13 +691,13 @@ export default function ServicesPage() {
                                                 <div className="slotWorker">
                                                     <span>{slot.worker?.name?.charAt(0) || "W"}</span>
                                                     <div>
-                                                        <b>{slot.worker?.name || "Worker"}</b>
+                                                        <b>{slot.worker?.name || t("servicesPage.worker")}</b>
                                                         <small>⭐ {slot.worker?.rating || 0} ({slot.worker?.totalReviews || 0})</small>
                                                     </div>
                                                 </div>
 
                                                 <div className="slotMeta">
-                                                    <span>📅 {new Date(slot.date).toLocaleDateString()}</span>
+                                                    <span>📅 {new Date(slot.date).toLocaleDateString(dashboardLocale(language))}</span>
                                                     <span>⏰ {slot.startTime} - {slot.endTime}</span>
                                                 </div>
                                             </button>
@@ -669,10 +707,10 @@ export default function ServicesPage() {
 
                                 <div className="modalActions split">
                                     <button className="cancelBtn" type="button" onClick={() => setBookingStep(1)}>
-                                        Back
+                                        {t("common.back")}
                                     </button>
                                     <button className="confirmBtn" type="button" onClick={goToSummaryStep}>
-                                        Continue
+                                        {t("servicesPage.continue")}
                                     </button>
                                 </div>
                             </div>
@@ -680,54 +718,52 @@ export default function ServicesPage() {
 
                         {bookingStep === 3 && (
                             <div className="bookingStep">
-                                <label>Payment method</label>
+                                <label>{t("servicesPage.paymentMethod")}</label>
                                 <select
                                     value={paymentType}
                                     onChange={(e) => setPaymentType(e.target.value)}
                                 >
-                                    <option value="cash">Cash</option>
-                                    <option value="vodafone_cash">Vodafone Cash</option>
-                                    <option value="instapay">InstaPay</option>
-                                    <option value="fawry">Fawry</option>
+                                    <option value="cash">{t("common.cash")}</option>
+                                    <option value="vodafone_cash">{formatPaymentType(language, "vodafone_cash")}</option>
+                                    <option value="instapay">{formatPaymentType(language, "instapay")}</option>
+                                    <option value="fawry">{formatPaymentType(language, "fawry")}</option>
                                 </select>
 
-                                <label>Promo code</label>
+                                <label>{t("servicesPage.promoCode")}</label>
                                 <div className="promoCodeRow">
                                     <input
                                         value={promoCode}
-                                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                                        placeholder="Example: FIX10"
+                                        onChange={(e) => {
+                                            setPromoCode(e.target.value.toUpperCase());
+                                            setPromoInfo(null);
+                                        }}
+                                        placeholder={t("servicesPage.promoPlaceholder")}
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            const discount = getPromoDiscount(promoCode);
-                                            if (!discount) return toast.error("Invalid promo code.");
-                                            localStorage.setItem("promo_code", promoCode.trim().toUpperCase());
-                                            toast.success(`${discount}% promo applied.`);
-                                        }}
+                                        onClick={validatePromoCode}
                                     >
-                                        Apply
+                                        {t("servicesPage.apply")}
                                     </button>
                                 </div>
 
                                 <div className="bookingSummary">
-                                    <h4>Booking summary</h4>
-                                    <div><span>Service</span><b>{selectedService}</b></div>
-                                    <div><span>Worker</span><b>{selectedSlot?.worker?.name || "N/A"}</b></div>
-                                    <div><span>Date</span><b>{selectedSlot ? new Date(selectedSlot.date).toLocaleDateString() : "N/A"}</b></div>
-                                    <div><span>Time</span><b>{selectedSlot ? `${selectedSlot.startTime} - ${selectedSlot.endTime}` : "N/A"}</b></div>
-                                    <div><span>Address</span><b>{address.trim()}</b></div>
-                                    <div><span>Media</span><b>{bookingFiles.length || "No"} file{bookingFiles.length === 1 ? "" : "s"}</b></div>
-                                    <div><span>Payment</span><b>{paymentType.replace("_", " ")}</b></div>
+                                    <h4>{t("servicesPage.bookingSummary")}</h4>
+                                    <div><span>{t("servicesPage.service")}</span><b>{formatServiceName(language, selectedService)}</b></div>
+                                    <div><span>{t("servicesPage.worker")}</span><b>{selectedSlot?.worker?.name || t("common.notAvailable")}</b></div>
+                                    <div><span>{t("servicesPage.date")}</span><b>{selectedSlot ? new Date(selectedSlot.date).toLocaleDateString(dashboardLocale(language)) : t("common.notAvailable")}</b></div>
+                                    <div><span>{t("servicesPage.time")}</span><b>{selectedSlot ? `${selectedSlot.startTime} - ${selectedSlot.endTime}` : t("common.notAvailable")}</b></div>
+                                    <div><span>{t("servicesPage.address")}</span><b>{address.trim()}</b></div>
+                                    <div><span>{t("servicesPage.media")}</span><b>{bookingFiles.length || t("servicesPage.no")} {bookingFiles.length === 1 ? t("servicesPage.file") : t("servicesPage.files")}</b></div>
+                                    <div><span>{t("servicesPage.payment")}</span><b>{formatPaymentType(language, paymentType)}</b></div>
                                     {promoCode && getPromoDiscount(promoCode) > 0 && (
-                                        <div><span>Promo</span><b>{promoCode.trim().toUpperCase()} - {getPromoDiscount(promoCode)}% off</b></div>
+                                        <div><span>{t("servicesPage.promo")}</span><b>{promoCode.trim().toUpperCase()} - {getPromoDiscount(promoCode)}%</b></div>
                                     )}
                                     {estimatePreview && (
                                         <div>
-                                            <span>Estimate</span>
+                                            <span>{t("servicesPage.estimate")}</span>
                                             <b>
-                                                {estimatePreview.min} - {estimatePreview.max} {estimatePreview.currency}
+                                                {estimatePreview.min} - {estimatePreview.max} {formatCurrency(language, estimatePreview.currency)}
                                             </b>
                                         </div>
                                     )}
@@ -737,25 +773,25 @@ export default function ServicesPage() {
                                     <div className="priceEstimateBox">
                                         {estimatePreview.discount && (
                                             <span>
-                                                Before promo: {estimatePreview.originalMin} - {estimatePreview.originalMax} {estimatePreview.currency}
+                                                {t("servicesPage.beforePromo")}: {estimatePreview.originalMin} - {estimatePreview.originalMax} {formatCurrency(language, estimatePreview.currency)}
                                             </span>
                                         )}
-                                        <b>Estimated range: {estimatePreview.min} - {estimatePreview.max} {estimatePreview.currency}</b>
-                                        <span>Severity: {estimatePreview.severity}</span>
-                                        <p>The worker will send the final price after checking the job.</p>
+                                        <b>{t("servicesPage.estimatedRange")}: {estimatePreview.min} - {estimatePreview.max} {formatCurrency(language, estimatePreview.currency)}</b>
+                                        <span>{t("servicesPage.severity")}: {formatSeverity(language, estimatePreview.severity)}</span>
+                                        <p>{t("servicesPage.finalPriceNote")}</p>
                                     </div>
                                 )}
 
                                 <div className="modalActions split">
                                     <button className="cancelBtn" type="button" onClick={() => setBookingStep(2)}>
-                                        Back
+                                        {t("common.back")}
                                     </button>
                                     <button
                                         className="confirmBtn"
                                         onClick={handleConfirmBooking}
                                         disabled={loading}
                                     >
-                                        {loading ? "Booking..." : "Confirm Booking"}
+                                        {loading ? `${t("servicesPage.booking")}...` : t("servicesPage.confirmBooking")}
                                     </button>
                                 </div>
                             </div>
@@ -764,30 +800,30 @@ export default function ServicesPage() {
                 </div>
             )}
 
-            <SiteFooter />
+            <SiteFooter language={language} t={t} />
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
                 <button
                     className={location.pathname === "/" ? "active" : ""}
                     onClick={() => navigate("/")}>
                     <span>🏠</span>
-                    <p>Home</p>
+                    <p>{t("site.home")}</p>
                 </button>
 
                 <button className={location.pathname === "/services" ? "active" : ""} onClick={() => navigate("/services")}>
                     <span>🧰</span>
-                    <p>Services</p>
+                    <p>{t("site.services")}</p>
                 </button>
 
                 <button className={location.pathname === "/ai-chat" ? "active" : ""} onClick={() => navigate("/ai-chat")}>
                     <span>💬</span>
-                    <p>Chat</p>
+                    <p>{t("site.chat")}</p>
                 </button>
 
                 <button
                     className={location.pathname === "/contact" ? "active" : ""}
                     onClick={() => navigate("/contact")}>
                     <span>📞</span>
-                    <p>Contact</p>
+                    <p>{t("site.contact")}</p>
                 </button>
             </div>
         </div>

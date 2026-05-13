@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./ai.css";
+import { formatServiceName, useDashboardLanguage } from "../utils/dashboardI18n";
 
-const initialMessages = [
-    {
+function createInitialMessages(t) {
+    return [{
         id: 1,
         sender: "bot",
-        text: "Hello! Tell me what issue you're facing, or upload a photo/video and I’ll guide you with quick safe steps.",
-    },
-];
+        text: t("aiPage.initial"),
+    }];
+}
 
 const quickReplies = [
     "Water leak under the sink",
@@ -66,7 +67,7 @@ function captureVideoFrame(video) {
     return canvas.toDataURL("image/jpeg", 0.78);
 }
 
-async function buildFilePayload(file) {
+async function buildFilePayload(file, t) {
     if (!file) return null;
 
     if (file.type.startsWith("image/")) {
@@ -103,14 +104,15 @@ async function buildFilePayload(file) {
         }
     }
 
-    throw new Error("Please upload an image or video file.");
+    throw new Error(t("aiPage.uploadError"));
 }
 
 export default function AIChatSection() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { language, isArabic, setLanguage, t } = useDashboardLanguage();
 
-    const [messages, setMessages] = useState(initialMessages);
+    const [messages, setMessages] = useState(() => createInitialMessages(t));
     const [input, setInput] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [thinking, setThinking] = useState(false);
@@ -135,6 +137,12 @@ export default function AIChatSection() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, thinking]);
 
+    useEffect(() => {
+        setMessages((prev) => (
+            prev.length === 1 && prev[0].id === 1 ? createInitialMessages(t) : prev
+        ));
+    }, [language, t]);
+
     async function sendToAi(text, file) {
         if (thinking) return;
         if (!text.trim() && !file) return;
@@ -145,7 +153,7 @@ export default function AIChatSection() {
             return;
         }
 
-        const userText = text.trim() || `Uploaded file: ${file.name}`;
+        const userText = text.trim() || `${t("aiPage.uploadedFile")}: ${file.name}`;
         const userMessage = {
             id: Date.now(),
             sender: "user",
@@ -156,7 +164,7 @@ export default function AIChatSection() {
         setThinking(true);
 
         try {
-            const payloadFile = await buildFilePayload(file);
+            const payloadFile = await buildFilePayload(file, t);
 
             const res = await fetch("https://tazabeet-backend.vibenest.net/api/ai/diagnose", {
                 method: "POST",
@@ -171,7 +179,7 @@ export default function AIChatSection() {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "AI diagnosis failed.");
+            if (!res.ok) throw new Error(data.message || t("aiPage.diagnosisFailed"));
 
             const botMessage = {
                 id: Date.now() + 1,
@@ -185,13 +193,13 @@ export default function AIChatSection() {
             setInput("");
             setSelectedFile(null);
         } catch (err) {
-            toast.error(err.message || "AI diagnosis failed.");
+            toast.error(err.message || t("aiPage.diagnosisFailed"));
             setMessages((prev) => [
                 ...prev,
                 {
                     id: Date.now() + 1,
                     sender: "bot",
-                    text: "I could not analyze that right now. Make sure Ollama is running, then try again.",
+                    text: t("aiPage.unavailable"),
                 },
             ]);
         } finally {
@@ -212,7 +220,7 @@ export default function AIChatSection() {
         if (!file) return;
 
         if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-            toast.error("Please upload an image or video file.");
+            toast.error(t("aiPage.uploadError"));
             return;
         }
 
@@ -221,9 +229,9 @@ export default function AIChatSection() {
     }
 
     return (
-        <div className="aiWrapper">
+        <div className={`aiWrapper ${isArabic ? "rtl" : ""}`} dir={isArabic ? "rtl" : "ltr"}>
             <div className="lpDesktopNav">
-                <button type="button" onClick={() => navigate("/")}>Home</button>
+                <button type="button" onClick={() => navigate("/")}>{t("site.home")}</button>
 
                 <button
                     type="button"
@@ -234,19 +242,35 @@ export default function AIChatSection() {
                         else navigate("/login", { state: { tab: "login", needLogin: true } });
                     }}
                 >
-                    Services
+                    {t("site.services")}
                 </button>
 
-                <button type="button" onClick={() => navigate("/ai-chat")}>AI Chat</button>
-                <button type="button" onClick={() => navigate("/contact")}>Contact</button>
+                <button type="button" onClick={() => navigate("/ai-chat")}>{t("site.aiChat")}</button>
+                <button type="button" onClick={() => navigate("/contact")}>{t("site.contact")}</button>
+                <button
+                    type="button"
+                    className="dashboardLangToggle"
+                    onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                >
+                    🌐 {t("common.languageToggle")}
+                </button>
             </div>
 
             <div className="aiHeader">
                 <div>
-                    <h2>AI Diagnostics</h2>
-                    <p>Chat in English or العربية</p>
+                    <h2>{t("aiPage.title")}</h2>
+                    <p>{t("aiPage.subtitle")}</p>
                 </div>
-                <div className="aiBadge">Local Ollama</div>
+                <div className="aiHeaderActions">
+                    <div className="aiBadge">{t("aiPage.badge")}</div>
+                    <button
+                        type="button"
+                        className="aiLangToggle"
+                        onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                    >
+                        🌐 {t("common.languageToggle")}
+                    </button>
+                </div>
             </div>
 
             <div className="aiChatBox">
@@ -275,8 +299,8 @@ export default function AIChatSection() {
                                         }
                                     >
                                         {detectArabic(msg.text)
-                                            ? `احجز ${msg.service}`
-                                            : `Book ${msg.service}`}
+                                            ? t("aiPage.book", { service: formatServiceName("ar", msg.service) })
+                                            : t("aiPage.book", { service: formatServiceName(language, msg.service) })}
                                     </button>
                                 )}
                             </div>
@@ -285,7 +309,7 @@ export default function AIChatSection() {
 
                     {thinking && (
                         <div className="aiRow left">
-                            <div className="aiBubble bot aiThinking">Analyzing with Ollama...</div>
+                            <div className="aiBubble bot aiThinking">{t("aiPage.analyzing")}</div>
                         </div>
                     )}
 
@@ -302,23 +326,23 @@ export default function AIChatSection() {
 
                 {selectedFile && (
                     <div className="aiFile">
-                        Selected: {selectedFile.name}
+                        {t("aiPage.selected")}: {selectedFile.name}
                         {selectedFile.type.startsWith("video/") && (
-                            <span> Video will be checked from sampled frames.</span>
+                            <span> {t("aiPage.videoNote")}</span>
                         )}
                     </div>
                 )}
 
                 <div className="aiInputArea">
                     <label className="aiUpload">
-                        Upload
+                        {t("aiPage.upload")}
                         <input type="file" accept="image/*,video/*" onChange={handleFileChange} hidden />
                     </label>
 
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Describe problem..."
+                        placeholder={t("aiPage.placeholder")}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") handleSend();
                         }}
@@ -326,13 +350,13 @@ export default function AIChatSection() {
                     />
 
                     <button onClick={handleSend} disabled={thinking}>
-                        {thinking ? "Wait" : "Send"}
+                        {thinking ? t("aiPage.wait") : t("aiPage.send")}
                     </button>
                 </div>
             </div>
 
             <div className="aiNote">
-                AI gives quick safety guidance only. For danger, call emergency services and book a professional.
+                {t("aiPage.note")}
             </div>
 
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
@@ -340,24 +364,24 @@ export default function AIChatSection() {
                     className={location.pathname === "/" ? "active" : ""}
                     onClick={() => navigate("/")}>
                     <span>🏠</span>
-                    <p>Home</p>
+                    <p>{t("site.home")}</p>
                 </button>
 
                 <button className={location.pathname === "/services" ? "active" : ""} onClick={() => navigate("/services")}>
                     <span>🧰</span>
-                    <p>Services</p>
+                    <p>{t("site.services")}</p>
                 </button>
 
                 <button className={location.pathname === "/ai-chat" ? "active" : ""} onClick={() => navigate("/ai-chat")}>
                     <span>💬</span>
-                    <p>Chat</p>
+                    <p>{t("site.chat")}</p>
                 </button>
 
                 <button
                     className={location.pathname === "/contact" ? "active" : ""}
                     onClick={() => navigate("/contact")}>
                     <span>📞</span>
-                    <p>Contact</p>
+                    <p>{t("site.contact")}</p>
                 </button>
             </div>
         </div>

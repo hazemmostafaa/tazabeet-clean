@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 import "./LandingPage.css";
 import logo from "../assets/logo.png";
 import SiteFooter from "../components/SiteFooter";
+import { useDashboardLanguage } from "../utils/dashboardI18n";
 
 export default function ContactPage() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { language, isArabic, setLanguage, t } = useDashboardLanguage();
     const [showNav, setShowNav] = useState(true);
     const [form, setForm] = useState({
         name: "",
@@ -32,16 +34,16 @@ export default function ContactPage() {
         e.preventDefault();
 
         if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-            toast.error("Please fill in all contact fields.");
+            toast.error(t("contactPage.fillAll"));
             return;
         }
 
-        toast.success("Thanks. We received your message.");
+        toast.success(t("contactPage.received"));
         setForm({ name: "", email: "", message: "" });
     }
 
     return (
-        <div className="lp">
+        <div className={`lp ${isArabic ? "rtl" : ""}`} dir={isArabic ? "rtl" : "ltr"}>
             <div className="lpTopLanding">
                 <button className="lpBrand" type="button" onClick={() => navigate("/")}>
                     <img src={logo} alt="logo" className="lpLogo" />
@@ -49,13 +51,20 @@ export default function ContactPage() {
                 </button>
 
                 <div className="lpDesktopNav">
-                    <button type="button" onClick={() => navigate("/")}>Home</button>
-                    <button type="button" onClick={() => navigate("/services")}>Services</button>
-                    <button type="button" onClick={() => navigate("/ai-chat")}>AI Chat</button>
-                    <button type="button" className="active" onClick={() => navigate("/contact")}>Contact</button>
+                    <button type="button" onClick={() => navigate("/")}>{t("site.home")}</button>
+                    <button type="button" onClick={() => navigate("/services")}>{t("site.services")}</button>
+                    <button type="button" onClick={() => navigate("/ai-chat")}>{t("site.aiChat")}</button>
+                    <button type="button" className="active" onClick={() => navigate("/contact")}>{t("site.contact")}</button>
                 </div>
 
                 <div className="lpTopBtns">
+                    <button
+                        type="button"
+                        className="dashboardLangToggle"
+                        onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                    >
+                        🌐 {t("common.languageToggle")}
+                    </button>
                     <button
                         className="lpProfileBtn"
                         type="button"
@@ -68,9 +77,9 @@ export default function ContactPage() {
 
             <div className="lpHero">
                 <div className="lpHeroInner">
-                    <div className="lpLoc">Alexandria support team</div>
+                    <div className="lpLoc">{t("contactPage.support")}</div>
                     <div className="lpTitle">
-                        <div className="lpTitleA">Contact</div>
+                        <div className="lpTitleA">{t("contactPage.titleA")}</div>
                         <div className="lpTitleB">TAZABEET</div>
                     </div>
                 </div>
@@ -79,34 +88,34 @@ export default function ContactPage() {
             <div className="lpBody">
                 <div className="contactGrid">
                     <section className="contactPanel">
-                        <h2>Talk to us</h2>
-                        <p>Questions, support, partnership requests, or service issues can all come through here.</p>
+                        <h2>{t("contactPage.talk")}</h2>
+                        <p>{t("contactPage.text")}</p>
 
                         <div className="contactInfo">
                             <div>
-                                <b>Phone</b>
+                                <b>{t("contactPage.phone")}</b>
                                 <span>+20 100 123 4567</span>
                             </div>
                             <div>
-                                <b>Email</b>
+                                <b>{t("contactPage.email")}</b>
                                 <span>help@tazabeet.com</span>
                             </div>
                             <div>
-                                <b>Location</b>
-                                <span>Alexandria, Egypt</span>
+                                <b>{t("contactPage.location")}</b>
+                                <span>{t("landing.location")}</span>
                             </div>
                         </div>
                     </section>
 
                     <form className="contactForm" onSubmit={submitContact}>
-                        <label>Name</label>
+                        <label>{t("contactPage.name")}</label>
                         <input
                             value={form.name}
                             onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-                            placeholder="Your name"
+                            placeholder={t("contactPage.yourName")}
                         />
 
-                        <label>Email</label>
+                        <label>{t("contactPage.email")}</label>
                         <input
                             type="email"
                             value={form.email}
@@ -114,37 +123,37 @@ export default function ContactPage() {
                             placeholder="name@example.com"
                         />
 
-                        <label>Message</label>
+                        <label>{t("contactPage.message")}</label>
                         <textarea
                             value={form.message}
                             onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
-                            placeholder="How can we help?"
+                            placeholder={t("contactPage.messagePlaceholder")}
                             rows={6}
                         />
 
-                        <button type="submit">Send Message</button>
+                        <button type="submit">{t("contactPage.send")}</button>
                     </form>
                 </div>
             </div>
 
-            <SiteFooter />
+            <SiteFooter language={language} t={t} />
 
             <div className={`mobileNav ${showNav ? "show" : "hide"}`}>
                 <button className={location.pathname === "/" ? "active" : ""} onClick={() => navigate("/")}>
                     <span>🏠</span>
-                    <p>Home</p>
+                    <p>{t("site.home")}</p>
                 </button>
                 <button className={location.pathname === "/services" ? "active" : ""} onClick={() => navigate("/services")}>
                     <span>🧰</span>
-                    <p>Services</p>
+                    <p>{t("site.services")}</p>
                 </button>
                 <button className={location.pathname === "/ai-chat" ? "active" : ""} onClick={() => navigate("/ai-chat")}>
                     <span>💬</span>
-                    <p>Chat</p>
+                    <p>{t("site.chat")}</p>
                 </button>
                 <button className={location.pathname === "/contact" ? "active" : ""} onClick={() => navigate("/contact")}>
                     <span>📞</span>
-                    <p>Contact</p>
+                    <p>{t("site.contact")}</p>
                 </button>
             </div>
         </div>

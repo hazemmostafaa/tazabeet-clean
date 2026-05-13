@@ -5,6 +5,21 @@
     padding: 0;
 }
 
+.lp.rtl {
+    direction: rtl;
+}
+
+.lp.rtl input,
+.lp.rtl textarea,
+.lp.rtl select {
+    text-align: right;
+}
+
+.lp.rtl .lpCat,
+.lp.rtl .footerLink {
+    text-align: right;
+}
+
 .lpTopLanding {
     position: sticky;
     top: 0;
