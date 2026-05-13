@@ -2401,6 +2401,39 @@ select {
     font-weight: 950;
 }
 
+.profileTopActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.dashboardLangToggle {
+    border: 1px solid rgba(0, 0, 0, .14);
+    background: #fff;
+    color: #111;
+    min-height: 44px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 950;
+}
+
+.customerProfilePage.rtl {
+    direction: rtl;
+}
+
+.customerProfilePage.rtl .profileTopActions {
+    justify-content: flex-start;
+}
+
+.customerProfilePage.rtl input,
+.customerProfilePage.rtl textarea,
+.customerProfilePage.rtl select {
+    text-align: right;
+}
+
 .customerProfileBody {
     width: 100%;
     max-width: 1100px;
@@ -2551,6 +2584,7 @@ select {
     .customerProfileTop {
         min-height: 126px;
         padding: 30px 22px;
+        gap: 14px;
     }
 
     .customerProfileBody {

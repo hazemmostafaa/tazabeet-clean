@@ -1,9 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { api } from "../api";
+import {
+    dashboardLocale,
+    formatServiceName,
+    getStoredDashboardLanguage,
+    translate,
+} from "../utils/dashboardI18n";
 
 
 const locales = { "en-US": enUS };
@@ -31,7 +37,26 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-export default function ScheduleView() {
+const calendarArabicMessages = {
+    today: "اليوم",
+    previous: "السابق",
+    next: "التالي",
+    month: "شهر",
+    week: "أسبوع",
+    day: "يوم",
+    agenda: "قائمة",
+    date: "التاريخ",
+    time: "الوقت",
+    event: "الموعد",
+    noEventsInRange: "لا توجد مواعيد في هذا النطاق.",
+};
+
+export default function ScheduleView({ language: languageProp, t: tProp }) {
+    const language = languageProp || getStoredDashboardLanguage();
+    const t = useMemo(() => {
+        return tProp || ((key, params) => translate(language, key, params));
+    }, [language, tProp]);
+    const isArabic = language === "ar";
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [service, setService] = useState("");
@@ -57,30 +82,30 @@ export default function ScheduleView() {
 
             return {
                 id: e._id,
-                title: `${e.service || "Service"}`,
+                title: formatServiceName(language, e.service),
                 start,
                 end,
             };
         });
-    }, [events]);
+    }, [events, language]);
 
 
-    async function load() {
+    const load = useCallback(async function loadSchedule() {
         try {
             setLoading(true);
             const res = await api.get("/api/schedule/my");
             setEvents(res.data || []);
         } catch (e) {
             console.log(e);
-            setErr("Failed to load schedule");
+            setErr(t("schedule.failedLoad"));
         } finally {
             setLoading(false);
         }
-    }
+    }, [t]);
 
     useEffect(() => {
         load();
-    }, []);
+    }, [load]);
 
 
     async function addEvent(e) {
@@ -90,17 +115,17 @@ export default function ScheduleView() {
         console.log("SERVICE:", service);
 
         if (!service) {
-            setErr("Please select a service");
+            setErr(t("schedule.selectServiceError"));
             return;
         }
 
         if (!start || !end) {
-            setErr("Start and end time are required.");
+            setErr(t("schedule.requiredTimeError"));
             return;
         }
 
         if (new Date(end) <= new Date(start)) {
-            setErr("End must be after start.");
+            setErr(t("schedule.endAfterStartError"));
             return;
         }
 
@@ -132,7 +157,7 @@ export default function ScheduleView() {
             load();
         } catch (e2) {
             console.log(e2);
-            setErr(e2?.response?.data?.message || "Failed to create event");
+            setErr(e2?.response?.data?.message || t("schedule.createFailed"));
         }
     }
 
@@ -142,15 +167,15 @@ export default function ScheduleView() {
             await api.delete(`/api/schedule/${id}`);
             load();
         } catch (e) {
-            setErr("Failed to delete");
+            setErr(t("schedule.deleteFailed"));
         }
     }
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>Schedule</h1>
+        <div style={{ padding: 20 }} dir={isArabic ? "rtl" : "ltr"}>
+            <h1>{t("schedule.title")}</h1>
             <p style={{ opacity: 0.7 }}>
-                Add your available time slots
+                {t("schedule.help")}
             </p>
 
             {err && (
@@ -161,7 +186,7 @@ export default function ScheduleView() {
 
 
             <div style={card}>
-                <h3>Add Available Slot</h3>
+                <h3>{t("schedule.addSlotTitle")}</h3>
 
                 <form onSubmit={addEvent} style={{ display: "grid", gap: 10 }}>
 
@@ -172,15 +197,15 @@ export default function ScheduleView() {
                         required
                         style={input}
                     >
-                        <option value="">Select Service</option>
+                        <option value="">{t("schedule.selectService")}</option>
                         {servicesList.map((s, i) => (
                             <option key={i} value={s}>
-                                {s}
+                                {formatServiceName(language, s)}
                             </option>
                         ))}
                     </select>
 
-                    <label>Start</label>
+                    <label>{t("schedule.start")}</label>
                     <input
                         type="datetime-local"
                         value={start}
@@ -188,7 +213,7 @@ export default function ScheduleView() {
                         style={input}
                     />
 
-                    <label>End</label>
+                    <label>{t("schedule.end")}</label>
                     <input
                         type="datetime-local"
                         value={end}
@@ -197,14 +222,14 @@ export default function ScheduleView() {
                     />
 
                     <button type="submit" style={btn}>
-                        Add Slot
+                        {t("schedule.addSlot")}
                     </button>
                 </form>
             </div>
 
 
             <div style={card}>
-                <h3>Calendar {loading && "(Loading...)"}</h3>
+                <h3>{t("schedule.calendar")} {loading && t("schedule.loading")}</h3>
 
                 <div style={{ height: 500 }}>
                     <Calendar
@@ -215,6 +240,8 @@ export default function ScheduleView() {
                         views={["month", "week", "day"]}
                         defaultView="week"
                         style={{ height: "100%" }}
+                        culture={dashboardLocale(language)}
+                        messages={isArabic ? calendarArabicMessages : undefined}
                         onSelectEvent={(event) => {
                             setSelectedEvent(event);
                             setShowModal(true);
@@ -227,15 +254,15 @@ export default function ScheduleView() {
                 showModal && (
                     <div style={overlay}>
                         <div style={modal}>
-                            <h3>Delete Slot</h3>
-                            <p>Are you sure you want to delete this slot?</p>
+                            <h3>{t("schedule.deleteSlot")}</h3>
+                            <p>{t("schedule.deleteConfirm")}</p>
 
                             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
                                 <button
                                     style={cancelBtn}
                                     onClick={() => setShowModal(false)}
                                 >
-                                    Cancel
+                                    {t("common.cancel")}
                                 </button>
 
                                 <button
@@ -245,7 +272,7 @@ export default function ScheduleView() {
                                         setShowModal(false);
                                     }}
                                 >
-                                    Delete
+                                    {t("common.delete")}
                                 </button>
                             </div>
                         </div>

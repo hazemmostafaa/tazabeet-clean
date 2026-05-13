@@ -4,12 +4,21 @@ import { toast } from "react-toastify";
 import ScheduleView from "./ScheduleView";
 import "./worker.css";
 import NotificationsPanel from "../components/NotificationsPanel";
+import {
+    dashboardLocale,
+    formatCurrency,
+    formatPaymentType,
+    formatServiceName,
+    translateProgress,
+    translateStatus,
+    useDashboardLanguage,
+} from "../utils/dashboardI18n";
 
 export default function WorkerDashboard() {
     const navigate = useNavigate();
+    const { language, isArabic, setLanguage, t } = useDashboardLanguage();
     const [active, setActive] = useState("dashboard");
     const [jobs, setJobs] = useState([]);
-    const [ratings, setRatings] = useState([]);
     const [avgRating, setAvgRating] = useState(0);
     const [ratingCount, setRatingCount] = useState(0);
     useEffect(() => {
@@ -17,37 +26,12 @@ export default function WorkerDashboard() {
     }, []);
 
     async function fetchRatings() {
-        <div style={{ marginTop: 20 }}>
-            <h2>⭐ My Ratings</h2>
-
-            <div style={{ marginBottom: 10 }}>
-                Average: <b>{avgRating}</b> ({ratingCount} reviews)
-            </div>
-
-            {ratings.length === 0 ? (
-                <p>No ratings yet</p>
-            ) : (
-                ratings.map((r) => (
-                    <div key={r._id} style={{
-                        border: "1px solid #eee",
-                        padding: 10,
-                        borderRadius: 10,
-                        marginBottom: 8
-                    }}>
-                        <div>⭐ {r.rating} / 5</div>
-                        <div>👤 {r.customer?.name}</div>
-                        {r.review && <div>💬 {r.review}</div>}
-                    </div>
-                ))
-            )}
-        </div>
         try {
             const userId = localStorage.getItem("user_id");
 
             const res = await fetch(`https://tazabeet-backend.vibenest.net/api/schedule/worker-ratings/${userId}`);
             const data = await res.json();
 
-            setRatings(data.ratings);
             setAvgRating(data.average);
             setRatingCount(data.count);
 
@@ -55,24 +39,6 @@ export default function WorkerDashboard() {
             console.log(err);
         }
     }
-    async function fetchJobs() {
-        try {
-            const res = await fetch("https://tazabeet-backend.vibenest.net/api/schedule/worker", {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            });
-
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                setJobs(data);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-
     async function fetchJobs() {
         try {
             const res = await fetch("https://tazabeet-backend.vibenest.net/api/schedule/worker", {
@@ -101,8 +67,10 @@ export default function WorkerDashboard() {
             activeJobs: jobs.filter(j => j.status === "confirmed").length,
             completed: completedJobs.length,
             earnings: completedJobs.length * 50,
+            rating: avgRating || 0,
+            ratingCount,
         };
-    }, [jobs]);
+    }, [jobs, avgRating, ratingCount]);
 
     function logout() {
         localStorage.clear();
@@ -110,39 +78,49 @@ export default function WorkerDashboard() {
     }
 
     return (
-        <div className="wd">
+        <div className={`wd ${isArabic ? "rtl" : ""}`} dir={isArabic ? "rtl" : "ltr"}>
 
-            <Sidebar active={active} setActive={setActive} onLogout={logout} />
+            <Sidebar active={active} setActive={setActive} onLogout={logout} t={t} />
 
             <div className="wdContent">
-                {active === "dashboard" && <DashboardView stats={stats} jobs={jobs} refreshJobs={fetchJobs} />}
-                {active === "jobs" && <JobsView jobs={jobs} refreshJobs={fetchJobs} />}
-                {active === "schedule" && <ScheduleView />}
-                {active === "messages" && <MessagesView />}
-                {active === "profile" && <ProfileView />}
+                <div className="dashboardLanguageBar">
+                    <button
+                        type="button"
+                        className="dashboardLangToggle"
+                        onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                    >
+                        🌐 {t("common.languageToggle")}
+                    </button>
+                </div>
+
+                {active === "dashboard" && <DashboardView stats={stats} jobs={jobs} refreshJobs={fetchJobs} language={language} t={t} />}
+                {active === "jobs" && <JobsView jobs={jobs} refreshJobs={fetchJobs} language={language} t={t} />}
+                {active === "schedule" && <ScheduleView language={language} t={t} />}
+                {active === "messages" && <MessagesView language={language} t={t} />}
+                {active === "profile" && <ProfileView language={language} t={t} />}
             </div>
             <div className="mobileBottomNav">
                 <button onClick={() => setActive("dashboard")} className={active === "dashboard" ? "active" : ""}>
-                    📊 <span>Dashboard</span>
+                    📊 <span>{t("worker.nav.dashboard")}</span>
                 </button>
 
                 <button onClick={() => setActive("jobs")} className={active === "jobs" ? "active" : ""}>
-                    💼 <span>Jobs</span>
+                    💼 <span>{t("worker.nav.jobs")}</span>
                 </button>
 
                 <button onClick={() => setActive("schedule")} className={active === "schedule" ? "active" : ""}>
-                    📅 <span>Schedule</span>
+                    📅 <span>{t("worker.nav.schedule")}</span>
                 </button>
 
                 <button onClick={() => setActive("messages")} className={active === "messages" ? "active" : ""}>
-                    💬 <span>Messages</span>
+                    💬 <span>{t("worker.nav.messages")}</span>
                 </button>
 
                 <button onClick={() => setActive("profile")} className={active === "profile" ? "active" : ""}>
-                    👤 <span>Profile</span>
+                    👤 <span>{t("worker.nav.profile")}</span>
                 </button>
                 <button onClick={logout}>
-                    🚪 <span>Logout</span>
+                    🚪 <span>{t("worker.nav.logout")}</span>
                 </button>
             </div>
         </div>
@@ -150,13 +128,13 @@ export default function WorkerDashboard() {
 }
 
 
-function Sidebar({ active, setActive, onLogout }) {
+function Sidebar({ active, setActive, onLogout, t }) {
     const items = [
-        { key: "dashboard", label: "Dashboard" },
-        { key: "jobs", label: "My Jobs" },
-        { key: "schedule", label: "Schedule" },
-        { key: "messages", label: "Messages" },
-        { key: "profile", label: "Profile" },
+        { key: "dashboard", label: t("worker.nav.dashboard") },
+        { key: "jobs", label: t("worker.nav.myJobs") },
+        { key: "schedule", label: t("worker.nav.schedule") },
+        { key: "messages", label: t("worker.nav.messages") },
+        { key: "profile", label: t("worker.nav.profile") },
     ];
 
     return (
@@ -176,34 +154,36 @@ function Sidebar({ active, setActive, onLogout }) {
             </div>
 
             <button className="wdLogout" onClick={onLogout}>
-                Logout
+                {t("worker.nav.logout")}
             </button>
         </div>
     );
 }
 
 
-function DashboardView({ stats, jobs, refreshJobs }) {
+function DashboardView({ stats, jobs, refreshJobs, language, t }) {
     return (
         <div>
-            <h1>Dashboard</h1>
+            <h1>{t("worker.nav.dashboard")}</h1>
 
             <div className="wdCards">
-                <Card title="Active Jobs" value={stats.activeJobs} />
-                <Card title="Completed" value={stats.completed} />
-                <Card title="Earnings" value={`$${stats.earnings}`} />
+                <Card title={t("worker.activeJobs")} value={stats.activeJobs} />
+                <Card title={t("worker.completed")} value={stats.completed} />
+                <Card title={t("worker.earnings")} value={`${stats.earnings} ${t("common.egp")}`} />
+                <Card title={t("worker.rating")} value={`⭐ ${stats.rating} (${stats.ratingCount})`} />
             </div>
 
-            <Panel title="Recent Jobs">
-                <JobsTable jobs={jobs.slice(0, 5)} refreshJobs={refreshJobs} />
+            <Panel title={t("worker.recentJobs")}>
+                <JobsTable jobs={jobs.slice(0, 5)} refreshJobs={refreshJobs} language={language} t={t} />
             </Panel>
         </div>
     );
 }
 
 
-function JobsView({ jobs, refreshJobs }) {
+function JobsView({ jobs, refreshJobs, language, t }) {
     const [filter, setFilter] = useState("all");
+    const filters = ["all", "pending", "confirmed", "completed", "rejected", "cancelled"];
 
     const filteredJobs =
         filter === "all"
@@ -211,76 +191,35 @@ function JobsView({ jobs, refreshJobs }) {
             : jobs.filter(j => j.status === filter);
     return (
         <div>
-            <h1>My Jobs</h1>
+            <h1>{t("worker.nav.myJobs")}</h1>
 
             <div style={{ marginBottom: 10 }}>
                 <div className="filterBar">
-                    <button
-                        className={`filterBtn ${filter === "all" ? "active" : ""}`}
-                        onClick={() => setFilter("all")}
-                    >
-                        All
-                    </button>
-
-                    <button
-                        className={`filterBtn ${filter === "pending" ? "active" : ""}`}
-                        onClick={() => setFilter("pending")}
-                    >
-                        Pending
-                    </button>
-
-                    <button
-                        className={`filterBtn ${filter === "confirmed" ? "active" : ""}`}
-                        onClick={() => setFilter("confirmed")}
-                    >
-                        Confirmed
-                    </button>
-
-                    <button
-                        className={`filterBtn ${filter === "completed" ? "active" : ""}`}
-                        onClick={() => setFilter("completed")}
-                    >
-                        Completed
-                    </button>
-                    <button
-                        className={`filterBtn ${filter === "rejected" ? "active" : ""}`}
-                        onClick={() => setFilter("rejected")}
-                    >
-                        Rejected
-                    </button>
-                    <button
-                        className={`filterBtn ${filter === "cancelled" ? "active" : ""}`}
-                        onClick={() => setFilter("cancelled")}
-                    >
-                        Cancelled
-                    </button>
+                    {filters.map((filterKey) => (
+                        <button
+                            key={filterKey}
+                            className={`filterBtn ${filter === filterKey ? "active" : ""}`}
+                            onClick={() => setFilter(filterKey)}
+                        >
+                            {t(`worker.filters.${filterKey}`)}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            <Panel title="All Jobs">
-                <JobsTable jobs={filteredJobs} refreshJobs={refreshJobs} />
+            <Panel title={t("worker.allJobs")}>
+                <JobsTable jobs={filteredJobs} refreshJobs={refreshJobs} language={language} t={t} />
             </Panel>
         </div>
     );
-
-
-    return (
-        <div>
-            <h1>My Jobs</h1>
-            <Panel title="All Jobs">
-                <JobsTable jobs={jobs} refreshJobs={refreshJobs} />
-            </Panel>
-        </div>
-    );
-
 }
 
 
 
-function JobsTable({ jobs, refreshJobs }) {
+function JobsTable({ jobs, refreshJobs, language, t }) {
     const [quoteData, setQuoteData] = useState({});
 
-    if (!jobs.length) return <p>No jobs yet.</p>;
+    if (!jobs.length) return <p>{t("worker.noJobs")}</p>;
 
     function getJobAddress(job) {
         return (
@@ -296,38 +235,14 @@ function JobsTable({ jobs, refreshJobs }) {
         return job.location || job.customerLocation || job.bookingLocation;
     }
 
-    function formatPayment(paymentType) {
-        if (!paymentType) return "Cash";
-        return paymentType
-            .split("_")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    }
-
     function formatEstimate(job) {
-        if (!job.estimatedPrice?.min || !job.estimatedPrice?.max) return "Not estimated";
-        return `${job.estimatedPrice.min} - ${job.estimatedPrice.max} ${job.estimatedPrice.currency || "EGP"}`;
+        if (!job.estimatedPrice?.min || !job.estimatedPrice?.max) return t("worker.notEstimated");
+        return `${job.estimatedPrice.min} - ${job.estimatedPrice.max} ${formatCurrency(language, job.estimatedPrice.currency)}`;
     }
 
     function formatFinalPrice(job) {
-        if (!job.finalPrice?.amount) return "No final price";
-        return `${job.finalPrice.amount} ${job.finalPrice.currency || "EGP"} (${job.finalPrice.status || "pending"})`;
-    }
-
-    function formatProgress(progressStatus) {
-        const labels = {
-            requested: "Requested",
-            accepted: "Accepted",
-            price_sent: "Price sent",
-            price_accepted: "Price accepted",
-            on_the_way: "On the way",
-            arrived: "Arrived",
-            work_started: "Work started",
-            completed: "Completed",
-            cancelled: "Cancelled",
-        };
-
-        return labels[progressStatus] || "Slot created";
+        if (!job.finalPrice?.amount) return t("worker.noFinalPrice");
+        return `${job.finalPrice.amount} ${formatCurrency(language, job.finalPrice.currency)} (${translateStatus(language, job.finalPrice.status || "pending")})`;
     }
 
 
@@ -343,16 +258,16 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed");
+                toast.error(data.message || t("common.failed"));
                 return;
             }
 
-            toast.success("Job completed.");
+            toast.success(t("toasts.jobCompleted"));
             refreshJobs();
 
         } catch (err) {
             console.log(err);
-            toast.error("Error completing job");
+            toast.error(t("toasts.completeError"));
         }
     }
 
@@ -369,16 +284,16 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed");
+                toast.error(data.message || t("common.failed"));
                 return;
             }
 
-            toast.success("Job accepted.");
+            toast.success(t("toasts.jobAccepted"));
             refreshJobs();
 
         } catch (err) {
             console.log(err);
-            toast.error("Error accepting job");
+            toast.error(t("toasts.acceptError"));
         }
     }
 
@@ -386,7 +301,7 @@ function JobsTable({ jobs, refreshJobs }) {
         const current = quoteData[id] || {};
 
         if (!current.amount) {
-            toast.error("Enter the final price.");
+            toast.error(t("toasts.enterFinalPrice"));
             return;
         }
 
@@ -406,16 +321,16 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed to send final price");
+                toast.error(data.message || t("toasts.finalPriceFailed"));
                 return;
             }
 
-            toast.success("Final price sent to customer.");
+            toast.success(t("toasts.finalPriceSent"));
             setQuoteData((prev) => ({ ...prev, [id]: { amount: "", note: "" } }));
             refreshJobs();
         } catch (err) {
             console.log(err);
-            toast.error("Error sending final price");
+            toast.error(t("toasts.finalPriceError"));
         }
     }
 
@@ -432,15 +347,15 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed to update progress");
+                toast.error(data.message || t("toasts.progressFailed"));
                 return;
             }
 
-            toast.success("Progress updated.");
+            toast.success(t("toasts.progressUpdated"));
             refreshJobs();
         } catch (err) {
             console.log(err);
-            toast.error("Error updating progress");
+            toast.error(t("toasts.progressError"));
         }
     }
 
@@ -457,16 +372,16 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed");
+                toast.error(data.message || t("common.failed"));
                 return;
             }
 
-            toast.success("Job rejected.");
+            toast.success(t("toasts.jobRejected"));
             refreshJobs();
 
         } catch (err) {
             console.log(err);
-            toast.error("Error rejecting job");
+            toast.error(t("toasts.rejectError"));
         }
     }
 
@@ -483,16 +398,16 @@ function JobsTable({ jobs, refreshJobs }) {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed");
+                toast.error(data.message || t("common.failed"));
                 return;
             }
 
-            toast.success("Job cancelled.");
+            toast.success(t("toasts.jobCancelled"));
             refreshJobs();
 
         } catch (err) {
             console.log(err);
-            toast.error("Error cancelling job");
+            toast.error(t("toasts.cancelError"));
         }
     }
 
@@ -501,15 +416,15 @@ function JobsTable({ jobs, refreshJobs }) {
             <table className="wdTable">
                 <thead>
                     <tr>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Payment</th>
-                        <th>Price</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{t("worker.table.customer")}</th>
+                        <th>{t("worker.table.phone")}</th>
+                        <th>{t("worker.table.address")}</th>
+                        <th>{t("worker.table.payment")}</th>
+                        <th>{t("worker.table.price")}</th>
+                        <th>{t("worker.table.date")}</th>
+                        <th>{t("worker.table.time")}</th>
+                        <th>{t("worker.table.status")}</th>
+                        <th>{t("worker.table.actions")}</th>
                     </tr>
                 </thead>
 
@@ -520,10 +435,10 @@ function JobsTable({ jobs, refreshJobs }) {
 
                         return (
                             <tr key={j._id}>
-                                <td>{j.customer?.name || "N/A"}</td>
-                                <td>{j.customer?.phone || "N/A"}</td>
-                                <td>
-                                    {jobAddress || "❌ No address provided"}
+                                <td data-label={t("worker.table.customer")}>{j.customer?.name || t("common.notAvailable")}</td>
+                                <td data-label={t("worker.table.phone")}>{j.customer?.phone || t("common.notAvailable")}</td>
+                                <td data-label={t("worker.table.address")}>
+                                    {jobAddress || `❌ ${t("worker.noAddress")}`}
 
                                     {jobLocation?.lat && jobLocation?.lng && (
                                         <div style={{ fontSize: 12, color: "#888" }}>
@@ -546,46 +461,46 @@ function JobsTable({ jobs, refreshJobs }) {
                                                     target="_blank"
                                                     rel="noreferrer"
                                                 >
-                                                    {file.type === "video" ? "Video" : "Photo"} {index + 1}
+                                                    {file.type === "video" ? t("common.video") : t("common.photo")} {index + 1}
                                                 </a>
                                             ))}
                                         </div>
                                     )}
                                 </td>
-                                <td>{formatPayment(j.paymentType)}</td>
-                                <td>
+                                <td data-label={t("worker.table.payment")}>{formatPaymentType(language, j.paymentType)}</td>
+                                <td data-label={t("worker.table.price")}>
                                     <div>{formatEstimate(j)}</div>
                                     <small>{formatFinalPrice(j)}</small>
                                 </td>
-                                <td>{new Date(j.date).toLocaleDateString()}</td>
-                                <td>{j.startTime}</td>
+                                <td data-label={t("worker.table.date")}>{new Date(j.date).toLocaleDateString(dashboardLocale(language))}</td>
+                                <td data-label={t("worker.table.time")}>{j.startTime}</td>
 
-                                <td>
+                                <td data-label={t("worker.table.status")}>
                                     <span className={`status ${j.status}`}>
-                                        {j.status}
+                                        {translateStatus(language, j.status)}
                                     </span>
                                     <div className="jobProgressMini">
-                                        {formatProgress(j.progressStatus)}
+                                        {translateProgress(language, j.progressStatus)}
                                     </div>
                                 </td>
 
-                                <td>
+                                <td data-label={t("worker.table.actions")}>
 
 
                                     {j.status === "available" && (
                                         <span style={{ color: "#777", fontWeight: "bold" }}>
-                                            Open slot
+                                            {t("worker.openSlot")}
                                         </span>
                                     )}
 
                                     {j.status === "pending" && (
                                         <div style={{ display: "flex", gap: 6 }}>
                                             <button className="acceptBtn" onClick={() => acceptJob(j._id)}>
-                                                Accept
+                                                {t("worker.accept")}
                                             </button>
 
                                             <button className="rejectBtn" onClick={() => rejectJob(j._id)}>
-                                                Reject
+                                                {t("worker.reject")}
                                             </button>
                                         </div>
                                     )}
@@ -598,7 +513,7 @@ function JobsTable({ jobs, refreshJobs }) {
                                                     <input
                                                         type="number"
                                                         min="1"
-                                                        placeholder="Final price"
+                                                        placeholder={t("worker.finalPrice")}
                                                         value={quoteData[j._id]?.amount || ""}
                                                         onChange={(e) =>
                                                             setQuoteData((prev) => ({
@@ -611,7 +526,7 @@ function JobsTable({ jobs, refreshJobs }) {
                                                         }
                                                     />
                                                     <input
-                                                        placeholder="Note"
+                                                        placeholder={t("worker.note")}
                                                         value={quoteData[j._id]?.note || ""}
                                                         onChange={(e) =>
                                                             setQuoteData((prev) => ({
@@ -624,7 +539,7 @@ function JobsTable({ jobs, refreshJobs }) {
                                                         }
                                                     />
                                                     <button className="acceptBtn" onClick={() => sendFinalPrice(j._id)}>
-                                                        Send Price
+                                                        {t("worker.sendPrice")}
                                                     </button>
                                                 </div>
                                             )}
@@ -632,13 +547,13 @@ function JobsTable({ jobs, refreshJobs }) {
                                             {j.finalPrice?.status === "accepted" && (
                                                 <div className="progressActions">
                                                     <button type="button" onClick={() => updateProgress(j._id, "on_the_way")}>
-                                                        On my way
+                                                        {t("worker.onMyWay")}
                                                     </button>
                                                     <button type="button" onClick={() => updateProgress(j._id, "arrived")}>
-                                                        Arrived
+                                                        {t("worker.arrived")}
                                                     </button>
                                                     <button type="button" onClick={() => updateProgress(j._id, "work_started")}>
-                                                        Started
+                                                        {t("worker.started")}
                                                     </button>
                                                 </div>
                                             )}
@@ -648,14 +563,14 @@ function JobsTable({ jobs, refreshJobs }) {
                                                     className="completeBtn"
                                                     onClick={() => completeJob(j._id)}
                                                 >
-                                                    Complete
+                                                    {t("worker.complete")}
                                                 </button>
 
                                                 <button
                                                     className="cancelBtn"
                                                     onClick={() => cancelJob(j._id)}
                                                 >
-                                                    Cancel
+                                                    {t("common.cancel")}
                                                 </button>
                                             </div>
                                         </div>
@@ -664,21 +579,21 @@ function JobsTable({ jobs, refreshJobs }) {
 
                                     {j.status === "completed" && (
                                         <span style={{ color: "green", fontWeight: "bold" }}>
-                                            Done
+                                            {t("worker.done")}
                                         </span>
                                     )}
 
 
                                     {j.status === "rejected" && (
                                         <span style={{ color: "red" }}>
-                                            Rejected
+                                            {translateStatus(language, "rejected")}
                                         </span>
                                     )}
 
 
                                     {j.status === "cancelled" && (
                                         <span style={{ color: "orange" }}>
-                                            Cancelled
+                                            {translateStatus(language, "cancelled")}
                                         </span>
                                     )}
 
@@ -711,7 +626,7 @@ function Panel({ title, children }) {
     );
 }
 
-function MessagesView() {
+function MessagesView({ language, t }) {
     const [messages, setMessages] = useState([]);
     const [selectedScheduleId, setSelectedScheduleId] = useState("");
     const [reply, setReply] = useState("");
@@ -728,7 +643,7 @@ function MessagesView() {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed to load messages");
+                toast.error(data.message || t("toasts.loadMessagesFailed"));
                 return;
             }
 
@@ -740,7 +655,7 @@ function MessagesView() {
             }
         } catch (err) {
             console.log(err);
-            toast.error("Error loading messages");
+            toast.error(t("toasts.loadMessagesError"));
         } finally {
             setLoading(false);
         }
@@ -768,16 +683,16 @@ function MessagesView() {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed to send reply");
+                toast.error(data.message || t("toasts.replyFailed"));
                 return;
             }
 
             setReply("");
-            toast.success("Reply sent.");
+            toast.success(t("toasts.replySent"));
             fetchMessages();
         } catch (err) {
             console.log(err);
-            toast.error("Error sending reply");
+            toast.error(t("toasts.replyError"));
         }
     }
 
@@ -801,19 +716,19 @@ function MessagesView() {
 
     const selectedThread = threads.find((thread) => thread.schedule?._id === selectedScheduleId);
 
-    if (loading) return <p>Loading messages...</p>;
+    if (loading) return <p>{t("worker.loadingMessages")}</p>;
 
     return (
         <div>
-            <h1>Messages</h1>
+            <h1>{t("worker.nav.messages")}</h1>
 
             {threads.length === 0 ? (
-                <Panel title="Conversations">
-                    <p>No messages yet.</p>
+                <Panel title={t("worker.conversations")}>
+                    <p>{t("worker.noMessages")}</p>
                 </Panel>
             ) : (
                 <div className="messagesLayout">
-                    <Panel title="Conversations">
+                    <Panel title={t("worker.conversations")}>
                         <div className="threadList">
                             {threads.map((thread) => {
                                 const lastMessage = thread.messages[thread.messages.length - 1];
@@ -826,10 +741,10 @@ function MessagesView() {
                                         onClick={() => setSelectedScheduleId(scheduleId)}
                                         className={`threadButton ${selectedScheduleId === scheduleId ? "active" : ""}`}
                                     >
-                                        <b>{thread.customer?.name || "Customer"}</b>
-                                        <div style={{ fontSize: 12 }}>{thread.customer?.phone || "No phone"}</div>
+                                        <b>{thread.customer?.name || t("common.customer")}</b>
+                                        <div style={{ fontSize: 12 }}>{thread.customer?.phone || t("common.noPhone")}</div>
                                         <div style={{ fontSize: 12, color: "#666" }}>
-                                            {thread.schedule?.service || "Service"} - {lastMessage?.text}
+                                            {formatServiceName(language, thread.schedule?.service)} - {lastMessage?.text}
                                         </div>
                                     </button>
                                 );
@@ -837,11 +752,11 @@ function MessagesView() {
                         </div>
                     </Panel>
 
-                    <Panel title={selectedThread?.customer?.name || "Conversation"}>
+                    <Panel title={selectedThread?.customer?.name || t("worker.conversation")}>
                         {selectedThread && (
                             <>
                                 <div style={{ marginBottom: 10, fontSize: 13 }}>
-                                    Phone: <b>{selectedThread.customer?.phone || "N/A"}</b>
+                                    {t("common.phone")}: <b>{selectedThread.customer?.phone || t("common.notAvailable")}</b>
                                 </div>
 
                                 <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
@@ -859,7 +774,7 @@ function MessagesView() {
                                         >
                                             <div>{message.text}</div>
                                             <div style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>
-                                                {message.sender?.name || "User"}
+                                                {message.sender?.name || t("common.user")}
                                             </div>
                                         </div>
                                     ))}
@@ -869,9 +784,9 @@ function MessagesView() {
                                     <input
                                         value={reply}
                                         onChange={(e) => setReply(e.target.value)}
-                                        placeholder="Write a reply..."
+                                        placeholder={t("worker.writeReply")}
                                     />
-                                    <button className="acceptBtn" type="submit">Send</button>
+                                    <button className="acceptBtn" type="submit">{t("worker.send")}</button>
                                 </form>
                             </>
                         )}
@@ -883,7 +798,7 @@ function MessagesView() {
 }
 
 
-function ProfileView() {
+function ProfileView({ language, t }) {
     const [experience, setExperience] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
 
@@ -951,15 +866,15 @@ function ProfileView() {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message || "Failed to save profile");
+                toast.error(data.message || t("toasts.profileSaveFailed"));
                 return;
             }
 
-            toast.success("Profile saved.");
+            toast.success(t("toasts.profileSaved"));
             if (data.worker?.verificationStatus) setVerificationStatus(data.worker.verificationStatus);
         } catch (err) {
             console.log(err);
-            toast.error("Error saving profile");
+            toast.error(t("toasts.profileSaveError"));
         } finally {
             setSaving(false);
         }
@@ -974,7 +889,7 @@ function ProfileView() {
         if (!file) return;
 
         if (!file.type.startsWith("image")) {
-            toast.error("Profile photo must be an image");
+            toast.error(t("toasts.profilePhotoImage"));
             return;
         }
 
@@ -1011,7 +926,7 @@ function ProfileView() {
         e.preventDefault();
 
         if (!title.trim()) {
-            toast.error("Title is required");
+            toast.error(t("toasts.titleRequired"));
             return;
         }
 
@@ -1047,32 +962,32 @@ function ProfileView() {
 
     return (
         <div>
-            <h1>Profile</h1>
+            <h1>{t("worker.nav.profile")}</h1>
 
-            <NotificationsPanel />
+            <NotificationsPanel language={language} t={t} />
 
-            <Panel title="Worker Verification">
+            <Panel title={t("worker.workerVerification")}>
                 <div className={`verifiedBadge ${verificationStatus === "verified" ? "ok" : ""}`}>
-                    Status: {verificationStatus.replace("_", " ")}
+                    {t("worker.status")}: {translateStatus(language, verificationStatus)}
                 </div>
-                <p>Upload your ID, license, or certificate. Admin must verify you before you can accept jobs.</p>
+                <p>{t("worker.verificationHelp")}</p>
                 <input type="file" multiple accept="image/*,application/pdf" onChange={handleVerificationDocs} />
                 {verificationDocs.length > 0 && (
                     <div className="jobMediaList">
                         {verificationDocs.map((doc, index) => (
                             <a key={`${doc.name}-${index}`} href={doc.url} target="_blank" rel="noreferrer">
-                                {doc.name || `Document ${index + 1}`}
+                                {doc.name || `${t("common.document")} ${index + 1}`}
                             </a>
                         ))}
                     </div>
                 )}
             </Panel>
 
-            <Panel title="Profile Photo">
+            <Panel title={t("worker.profilePhoto")}>
                 <div className="workerPhotoEditor">
                     <div className="workerProfilePhoto">
                         {profilePhoto ? (
-                            <img src={profilePhoto} alt="Worker profile" />
+                            <img src={profilePhoto} alt={t("worker.workerProfileAlt")} />
                         ) : (
                             <span>{localStorage.getItem("customer_name")?.charAt(0) || "W"}</span>
                         )}
@@ -1081,21 +996,21 @@ function ProfileView() {
                 </div>
             </Panel>
 
-            <Panel title="Experience">
+            <Panel title={t("worker.experience")}>
                 <textarea
                     value={experience}
                     onChange={(e) => saveExperience(e.target.value)}
-                    placeholder="Write your experience..."
+                    placeholder={t("worker.writeExperience")}
                 />
                 <button type="button" onClick={() => saveWorkerProfile()} disabled={saving}>
-                    {saving ? "Saving..." : "Save Experience"}
+                    {saving ? t("common.saving") : t("worker.saveExperience")}
                 </button>
             </Panel>
 
-            <Panel title="Add Portfolio">
+            <Panel title={t("worker.addPortfolio")}>
                 <form onSubmit={addPortfolio}>
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-                    <textarea value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Description" />
+                    <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("worker.title")} />
+                    <textarea value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={t("worker.description")} />
                     <input type="file" multiple accept="image/*,video/*" onChange={handleFileChange} />
 
                     {files.length > 0 && (
@@ -1110,13 +1025,13 @@ function ProfileView() {
                         </div>
                     )}
 
-                    <button type="submit">Add to Portfolio</button>
+                    <button type="submit">{t("worker.addToPortfolio")}</button>
                 </form>
             </Panel>
 
-            <Panel title="My Portfolio">
+            <Panel title={t("worker.myPortfolio")}>
                 {items.length === 0 ? (
-                    <p>No portfolio yet</p>
+                    <p>{t("worker.noPortfolio")}</p>
                 ) : (
                     <div className="portfolioGrid">
                         {items.map((item) => (
@@ -1138,7 +1053,7 @@ function ProfileView() {
                                 </div>
 
                                 <button className="deleteBtn" onClick={() => removeItem(item.id || item._id)}>
-                                    Delete
+                                    {t("common.delete")}
                                 </button>
                             </div>
                         ))}
