@@ -3071,3 +3071,18 @@ select {
         -webkit-text-fill-color: #111 !important;
     }
 }
+
+@media (max-width: 768px) {
+    .customerProfilePage button,
+    .customerProfilePage button:hover,
+    .customerProfilePage button:active,
+    .customerProfilePage button:disabled {
+        -webkit-text-fill-color: currentColor !important;
+    }
+
+    .customerProfilePage .profileLogoutBtn {
+        background: #000 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000 !important;
+    }
+}
