@@ -19,6 +19,7 @@ export default function WorkerDashboard() {
     const { language, isArabic, setLanguage, t } = useDashboardLanguage();
     const [active, setActive] = useState("dashboard");
     const [jobs, setJobs] = useState([]);
+    const [wallet, setWallet] = useState(null);
     const [avgRating, setAvgRating] = useState(0);
     const [ratingCount, setRatingCount] = useState(0);
     useEffect(() => {
@@ -56,8 +57,25 @@ export default function WorkerDashboard() {
         }
     }
 
+    async function fetchWallet() {
+        try {
+            const res = await fetch("https://tazabeet-backend.vibenest.net/api/worker/wallet", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setWallet(data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         fetchJobs();
+        fetchWallet();
     }, []);
 
     const stats = useMemo(() => {
@@ -66,11 +84,11 @@ export default function WorkerDashboard() {
         return {
             activeJobs: jobs.filter(j => j.status === "confirmed").length,
             completed: completedJobs.length,
-            earnings: completedJobs.length * 50,
+            earnings: wallet?.balance || 0,
             rating: avgRating || 0,
             ratingCount,
         };
-    }, [jobs, avgRating, ratingCount]);
+    }, [jobs, avgRating, ratingCount, wallet]);
 
     function logout() {
         localStorage.clear();
@@ -93,8 +111,8 @@ export default function WorkerDashboard() {
                     </button>
                 </div>
 
-                {active === "dashboard" && <DashboardView stats={stats} jobs={jobs} refreshJobs={fetchJobs} language={language} t={t} />}
-                {active === "jobs" && <JobsView jobs={jobs} refreshJobs={fetchJobs} language={language} t={t} />}
+                {active === "dashboard" && <DashboardView stats={stats} jobs={jobs} wallet={wallet} refreshJobs={fetchJobs} refreshWallet={fetchWallet} language={language} t={t} />}
+                {active === "jobs" && <JobsView jobs={jobs} refreshJobs={fetchJobs} refreshWallet={fetchWallet} language={language} t={t} />}
                 {active === "schedule" && <ScheduleView language={language} t={t} />}
                 {active === "messages" && <MessagesView language={language} t={t} />}
                 {active === "profile" && <ProfileView language={language} t={t} />}
@@ -161,7 +179,7 @@ function Sidebar({ active, setActive, onLogout, t }) {
 }
 
 
-function DashboardView({ stats, jobs, refreshJobs, language, t }) {
+function DashboardView({ stats, jobs, wallet, refreshJobs, refreshWallet, language, t }) {
     return (
         <div>
             <h1>{t("worker.nav.dashboard")}</h1>
@@ -169,19 +187,96 @@ function DashboardView({ stats, jobs, refreshJobs, language, t }) {
             <div className="wdCards">
                 <Card title={t("worker.activeJobs")} value={stats.activeJobs} />
                 <Card title={t("worker.completed")} value={stats.completed} />
-                <Card title={t("worker.earnings")} value={`${stats.earnings} ${t("common.egp")}`} />
+                <Card title={t("worker.walletBalance")} value={`${stats.earnings} ${t("common.egp")}`} />
+                <Card title={t("worker.cashDebt")} value={`${wallet?.cashDebt || 0} ${t("common.egp")}`} />
                 <Card title={t("worker.rating")} value={`⭐ ${stats.rating} (${stats.ratingCount})`} />
             </div>
 
+            <WalletPanel wallet={wallet} refreshWallet={refreshWallet} language={language} t={t} />
+
             <Panel title={t("worker.recentJobs")}>
-                <JobsTable jobs={jobs.slice(0, 5)} refreshJobs={refreshJobs} language={language} t={t} />
+                <JobsTable jobs={jobs.slice(0, 5)} refreshJobs={refreshJobs} refreshWallet={refreshWallet} language={language} t={t} />
             </Panel>
         </div>
     );
 }
 
+function WalletPanel({ wallet, refreshWallet, language, t }) {
+    const transactions = wallet?.transactions || [];
 
-function JobsView({ jobs, refreshJobs, language, t }) {
+    return (
+        <Panel title={t("worker.wallet")}>
+            <div className={`walletStatus ${wallet?.canAcceptCashOrders === false ? "blocked" : "ok"}`}>
+                <b>
+                    {wallet?.canAcceptCashOrders === false
+                        ? t("worker.cashOrdersBlocked")
+                        : t("worker.cashOrdersAvailable")}
+                </b>
+                <span>
+                    {t("worker.remainingBeforeBlock")}: {wallet?.remainingBeforeBlock ?? 0} {formatCurrency(language, wallet?.currency)}
+                </span>
+            </div>
+
+            <div className="walletGrid">
+                <div>
+                    <span>{t("worker.cashCollected")}</span>
+                    <b>{wallet?.cashCollected || 0} {formatCurrency(language, wallet?.currency)}</b>
+                </div>
+                <div>
+                    <span>{t("worker.platformFees")}</span>
+                    <b>{wallet?.platformFees || 0} {formatCurrency(language, wallet?.currency)}</b>
+                </div>
+                <div>
+                    <span>{t("worker.cashDebt")}</span>
+                    <b>{wallet?.cashDebt || 0} {formatCurrency(language, wallet?.currency)}</b>
+                </div>
+                <div>
+                    <span>{t("worker.debtLimit")}</span>
+                    <b>{wallet?.debtLimit || 0} {formatCurrency(language, wallet?.currency)}</b>
+                </div>
+            </div>
+
+            <div className="paymentSetup">
+                <b>{t("worker.paymentSetup")}</b>
+                <span>{t("common.cash")}: {t("worker.cashActive")}</span>
+                <span>InstaPay: {t("worker.manualSetupRequired")}</span>
+                <span>Vodafone Cash: {t("worker.merchantRequired")}</span>
+                <span>Fawry: {t("worker.merchantRequired")}</span>
+            </div>
+
+            <div className="walletTransactionsHeader">
+                <b>{t("worker.walletTransactions")}</b>
+                {refreshWallet && (
+                    <button type="button" onClick={refreshWallet}>
+                        ↻
+                    </button>
+                )}
+            </div>
+
+            {transactions.length === 0 ? (
+                <p>{t("worker.noWalletTransactions")}</p>
+            ) : (
+                <div className="walletTransactions">
+                    {transactions.map((tx) => (
+                        <div key={tx._id} className="walletTransaction">
+                            <div>
+                                <b>{t(`worker.transactionTypes.${tx.type}`)}</b>
+                                <span>{tx.schedule?.service || tx.description}</span>
+                            </div>
+                            <strong className={tx.direction === "debit" ? "debit" : "credit"}>
+                                {tx.direction === "debit" ? "-" : "+"}{tx.amount} {formatCurrency(language, tx.currency)}
+                            </strong>
+                            <small>{new Date(tx.createdAt).toLocaleString(dashboardLocale(language))}</small>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </Panel>
+    );
+}
+
+
+function JobsView({ jobs, refreshJobs, refreshWallet, language, t }) {
     const [filter, setFilter] = useState("all");
     const filters = ["all", "pending", "confirmed", "completed", "rejected", "cancelled"];
 
@@ -208,7 +303,7 @@ function JobsView({ jobs, refreshJobs, language, t }) {
             </div>
 
             <Panel title={t("worker.allJobs")}>
-                <JobsTable jobs={filteredJobs} refreshJobs={refreshJobs} language={language} t={t} />
+                <JobsTable jobs={filteredJobs} refreshJobs={refreshJobs} refreshWallet={refreshWallet} language={language} t={t} />
             </Panel>
         </div>
     );
@@ -216,7 +311,7 @@ function JobsView({ jobs, refreshJobs, language, t }) {
 
 
 
-function JobsTable({ jobs, refreshJobs, language, t }) {
+function JobsTable({ jobs, refreshJobs, refreshWallet, language, t }) {
     const [quoteData, setQuoteData] = useState({});
 
     if (!jobs.length) return <p>{t("worker.noJobs")}</p>;
@@ -264,6 +359,7 @@ function JobsTable({ jobs, refreshJobs, language, t }) {
 
             toast.success(t("toasts.jobCompleted"));
             refreshJobs();
+            if (refreshWallet) refreshWallet();
 
         } catch (err) {
             console.log(err);

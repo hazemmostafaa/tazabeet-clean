@@ -85,7 +85,7 @@
 
 .wdCards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
     margin-bottom: 20px;
     width: 100%;
@@ -207,6 +207,118 @@
     color: #555;
     font-size: 12px;
     font-weight: 800;
+}
+
+.walletStatus {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #e8fff0;
+    border: 1px solid #9be0b1;
+}
+
+.walletStatus.blocked {
+    background: #fff0f0;
+    border-color: #ffb1b1;
+}
+
+.walletGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.walletGrid > div {
+    background: #f7f7f7;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+}
+
+.walletGrid span,
+.paymentSetup span,
+.walletTransaction span,
+.walletTransaction small {
+    color: #555;
+}
+
+.walletGrid b {
+    font-size: 18px;
+}
+
+.paymentSetup {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    background: #fff8c9;
+    border: 1px solid #FFD000;
+    margin-bottom: 12px;
+}
+
+.paymentSetup span {
+    background: #fff;
+    border-radius: 999px;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.walletTransactionsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.walletTransactionsHeader button {
+    width: auto;
+    margin-top: 0;
+    padding: 6px 10px;
+    min-width: 40px;
+}
+
+.walletTransactions {
+    display: grid;
+    gap: 8px;
+}
+
+.walletTransaction {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.walletTransaction > div {
+    display: grid;
+    gap: 2px;
+}
+
+.walletTransaction strong {
+    grid-row: span 2;
+    align-self: center;
+    white-space: nowrap;
+}
+
+.walletTransaction strong.credit {
+    color: #0a7a2f;
+}
+
+.walletTransaction strong.debit {
+    color: #c62828;
 }
 
 .progressActions {
@@ -525,6 +637,10 @@ textarea {
     .wdCards {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .walletGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -548,6 +664,10 @@ textarea {
     }
 
     .wdCards {
+        grid-template-columns: 1fr;
+    }
+
+    .walletGrid {
         grid-template-columns: 1fr;
     }
 

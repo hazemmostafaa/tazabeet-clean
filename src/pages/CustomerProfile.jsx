@@ -68,6 +68,8 @@ export default function CustomerProfile() {
     useEffect(() => {
         fetchJobs();
         fetchFavorites();
+        const interval = setInterval(fetchJobs, 8000);
+        return () => clearInterval(interval);
     }, []);
 
     async function fetchFavorites() {
