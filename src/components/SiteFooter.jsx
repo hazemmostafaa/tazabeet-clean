@@ -1,10 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { SocialIcon } from "react-social-icons";
 
 const socialLinks = [
-    { label: "Website", icon: "🌐", href: "https://tazabeet.netlify.app" },
-    { label: "Instagram", icon: "📸", href: "https://instagram.com" },
-    { label: "Facebook", icon: "📘", href: "https://facebook.com" },
+    { label: "Facebook", href: "https://facebook.com" },
+    { label: "Instagram", href: "https://instagram.com" },
+    { label: "Twitter", href: "https://twitter.com" },
 ];
 
 export default function SiteFooter() {
@@ -19,16 +20,17 @@ export default function SiteFooter() {
 
                 <div className="footerIcons" aria-label="Social links">
                     {socialLinks.map((link) => (
-                        <a
+                        <SocialIcon
                             key={link.label}
-                            className="footerIconButton"
-                            href={link.href}
+                            url={link.href}
+                            className="footerSocialIcon"
                             target="_blank"
                             rel="noreferrer"
                             aria-label={link.label}
-                        >
-                            <span aria-hidden="true">{link.icon}</span>
-                        </a>
+                            bgColor="#333"
+                            fgColor="#fff"
+                            style={{ width: 50, height: 50 }}
+                        />
                     ))}
                 </div>
 
