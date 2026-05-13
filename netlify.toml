@@ -3,6 +3,21 @@
   publish = "build"
 
 [[redirects]]
+  from = "/google76123db1d9d685ed.html"
+  to = "/google76123db1d9d685ed.html"
+  status = 200
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
