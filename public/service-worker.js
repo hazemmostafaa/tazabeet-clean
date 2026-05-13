@@ -1,12 +1,12 @@
-const CACHE_NAME = "tazabeet-pwa-v1";
+const CACHE_NAME = "tazabeet-pwa-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/manifest.json",
   "/logo.png",
-  "/pwa-icon-192.png",
-  "/pwa-icon-512.png",
-  "/apple-touch-icon.png"
+  "/pwa-icon-192-v2.png",
+  "/pwa-icon-512-v2.png",
+  "/apple-touch-icon-v2.png"
 ];
 
 self.addEventListener("install", (event) => {
