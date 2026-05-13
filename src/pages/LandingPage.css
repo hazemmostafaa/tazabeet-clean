@@ -3085,4 +3085,10 @@ select {
         color: #FFD000 !important;
         -webkit-text-fill-color: #FFD000 !important;
     }
+
+    .customerProfilePage .notifyHeader button {
+        background: #111 !important;
+        color: #FFD000 !important;
+        -webkit-text-fill-color: #FFD000 !important;
+    }
 }
